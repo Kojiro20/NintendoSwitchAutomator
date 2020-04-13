@@ -20,60 +20,7 @@ these buttons for our use.
 
 #include "Joystick.h"
 
-typedef enum {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    X,
-    Y,
-    A,
-    B,
-    L,
-    R,
-    THROW,
-    NOTHING,
-    TRIGGERS,
-    PAD_LEFT,
-    PAD_UP,
-    PAD_RIGHT,
-    PAD_DOWN,
-} Buttons_t;
-
-typedef struct {
-    Buttons_t button;
-    uint16_t duration;
-} command; 
-
-static const command step[] = {
-
-    // put away tools
-    { PAD_DOWN, 50 },
-    { NOTHING, 50 },
-    
-    // run in a circle
-    { UP, 25 },
-    { NOTHING, 25 },
-    { RIGHT, 25 },
-    { NOTHING, 25 },
-    { DOWN, 25 },
-    { NOTHING, 25 },
-    { LEFT, 25 },
-    { NOTHING, 25 },
-
-    // use shovel
-    { PAD_UP, 25 },
-    { DOWN, 25 },
-    { A, 50 },
-    { NOTHING, 50 },
-
-    // run left and dig a hole
-    { LEFT, 100 },
-    { A, 100 },
-    { RIGHT, 100 },
-    { NOTHING, 100 },
-
-};
+static Command command = { NOTHING, 10 };
 
 // Main entry point.
 int main(void) {
@@ -81,6 +28,8 @@ int main(void) {
     SetupHardware();
     // We'll then enable global interrupts for our use.
     GlobalInterruptEnable();
+    // Initialize the game script. TODO: set this when button is pressed Buttons_GetStatus.
+    InitializeGameScript();
     // Once that's done, we'll enter an infinite loop.
     for (;;)
     {
@@ -280,7 +229,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
         case PROCESS:
 
-            switch (step[bufindex].button)
+            switch (command.button)
             {
 
                 case UP:
@@ -307,8 +256,20 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
                     ReportData->Button |= SWITCH_B;
                     break;
 
+                case L:
+                    ReportData->Button |= SWITCH_L;
+                    break;
+
                 case R:
                     ReportData->Button |= SWITCH_R;
+                    break;
+
+                case ZL:
+                    ReportData->Button |= SWITCH_ZL;
+                    break;
+
+                case ZR:
+                    ReportData->Button |= SWITCH_ZR;
                     break;
 
                 case THROW:
@@ -324,12 +285,12 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
                     ReportData->HAT = HAT_LEFT;
                     break;
 
-                case PAD_RIGHT:
-                    ReportData->HAT = HAT_RIGHT;
-                    break;
-
                 case PAD_UP:
                     ReportData->HAT = HAT_TOP;
+                    break;
+
+                case PAD_RIGHT:
+                    ReportData->HAT = HAT_RIGHT;
                     break;
 
                 case PAD_DOWN:
@@ -347,33 +308,14 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
             duration_count++;
 
-            if (duration_count > step[bufindex].duration)
+            if (duration_count > command.duration)
             {
                 bufindex++;
-                duration_count = 0;                
-            }
-
-
-            if (bufindex > (int)( sizeof(step) / sizeof(step[0])) - 1)
-            {
-
-                // state = CLEANUP;
-
-                bufindex = 0;
                 duration_count = 0;
 
+                command = GetNextCommand();
+
                 state = BREATHE;
-
-                ReportData->LX = STICK_CENTER;
-                ReportData->LY = STICK_CENTER;
-                ReportData->RX = STICK_CENTER;
-                ReportData->RY = STICK_CENTER;
-                ReportData->HAT = HAT_CENTER;
-
-
-                // state = DONE;
-//                state = BREATHE;
-
             }
 
             break;

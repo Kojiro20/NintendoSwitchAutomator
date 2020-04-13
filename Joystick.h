@@ -51,6 +51,7 @@
 #include <LUFA/Platform/Platform.h>
 
 #include "Descriptors.h"
+#include "GameScript.h"
 
 // Type Defines
 // Enumeration for joystick buttons.
@@ -111,7 +112,7 @@ typedef struct {
 // Setup all necessary hardware, including USB initialization.
 void SetupHardware(void);
 // Process and deliver data from IN and OUT endpoints.
-void HID_Task(void);
+void HID_Task();
 // USB device event handlers.
 void EVENT_USB_Device_Connect(void);
 void EVENT_USB_Device_Disconnect(void);
