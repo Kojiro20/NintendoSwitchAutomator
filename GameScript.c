@@ -24,6 +24,36 @@ void LoadUserCommands(void) {
 
     // put tool away
     act(PAD_DOWN, 10, 20);
+
+    RunInCircle(20);
+
+    act(LEFT, 50, 0);
+    DigHole();
+    act(RIGHT, 50, 0);
+}
+
+void RunInCircle(int dist) {
+
+    // run around in a circle
+    act(LEFT, dist, dist);
+    act(UP, dist, dist);
+    act(RIGHT, dist, dist);
+    act(DOWN, dist, dist);
+}
+
+void DigHole(void) {
+
+    // open tool picker and select bottom tool (should be shovel)
+    act(PAD_UP, 5, 15);
+    act(DOWN, 5, 5);
+    act(A, 5, 15);
+
+    // look down and perform action
+    act(DOWN, 1, 15);
+    act(A, 15, 50);
+
+    // put tool away
+    act(PAD_DOWN, 10, 20);
 }
 
 /*
