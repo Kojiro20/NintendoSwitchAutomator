@@ -2,12 +2,43 @@
 #include <stdlib.h>
 #include "scripts.h"
 #include "AnimalCrossing/movement.h"
+#include "AnimalCrossing/tools.h"
+// #include "AnimalCrossing/harvestFromTree.h"
 
 /*
  * The main game script to be executed
  */
 struct Node* loadScript(void) {
-    return FaceUp();
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
+
+    // move down
+    curr = appendAction(curr, DOWN, 20, 20);
+
+    // face up
+    curr->child = FaceUp();
+
+    // move left
+    curr = appendAction(curr, LEFT, 20, 20);
+
+    // swing axe
+    curr->child = GetAxe();
+    curr = appendAction(curr, A, 5, 50);
+
+    // move up
+    curr = appendAction(curr, UP, 20, 20);
+
+    // face down
+    curr->child = FaceDown();
+
+    // move right
+    curr = appendAction(curr, RIGHT, 20, 20);
+
+    // dig hole
+    curr->child = GetShovel();
+    curr = appendAction(curr, A, 5, 50);
+
+    return head;
 }
 
 /*
@@ -37,7 +68,7 @@ struct Node* appendAction(struct Node* curr, Buttons_t button, uint16_t duration
  */
 struct Node* noOp(struct Node* curr, uint16_t waitTime) {
     struct Node* delay = initializeNode(NOTHING, waitTime);
-    delay->next = delay;
+    curr->next = delay;
     return delay;
 }
 
