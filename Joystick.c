@@ -262,7 +262,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
                     break;
 
                 case DOWN_RIGHT:
-                    ReportData->LX = STICK_MAX;
+                    ReportData->LY = STICK_MAX;
                     ReportData->LX = STICK_MAX;
                     break;
 
