@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "__mutex_base": "c",
+        "scripts.h": "c",
+        "movement.h": "c"
+    }
+}
