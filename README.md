@@ -14,14 +14,23 @@ In case you see issues with controller conflicts while in docked mode, try using
   brew install avr-gcc
   ```
 
-2) Build
+1) Initialize sub modules (or manually clone lufa)
   ```bash
-  cd </projectroot>
+  # from project root
+  git clone https://github.com/abcminiuser/lufa.git
+  # or
+  git clone --recursive git@github.com:bertrandom/snowball-thrower.git
+  ```
+
+1) Build
+  ```bash
+  # from project root
   make
   ```
 
-3) Flash (tap the button twice to put it into flash mode)
+1) Flash (tap the button twice to put it into flash mode)
   ```bash
+  # from project root
   ./flash.sh
   ```
 
