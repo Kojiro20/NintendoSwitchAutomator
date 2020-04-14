@@ -1,5 +1,5 @@
-#ifndef _GAME_PLAY_H_
-#define _GAME_PLAY_H_
+#ifndef _SCRIPTS_COMMON_
+#define _SCRIPTS_COMMON_
 
 #include <stdint.h>
 
@@ -8,6 +8,10 @@ typedef enum {
     DOWN,
     LEFT,
     RIGHT,
+    UP_LEFT,
+    UP_RIGHT,
+    DOWN_LEFT,
+    DOWN_RIGHT,
     X,
     Y,
     A,
@@ -29,9 +33,5 @@ typedef struct {
     Buttons_t button;
     uint16_t duration;
 } Command;
-
-Command GetNextCommand(void);
-
-void InitializeGameScript(void);
 
 #endif

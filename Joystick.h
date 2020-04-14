@@ -50,8 +50,9 @@
 #include <LUFA/Drivers/Board/Buttons.h>
 #include <LUFA/Platform/Platform.h>
 
+#include "scripts/common.h"
+#include "scripts/runner.h"
 #include "Descriptors.h"
-#include "GameScript.h"
 
 // Type Defines
 // Enumeration for joystick buttons.
