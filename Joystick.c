@@ -151,7 +151,6 @@ USB_JoystickReport_Input_t last_report;
 int report_count = 0;
 int xpos = 0;
 int ypos = 0;
-int bufindex = 0;
 int duration_count = 0;
 int portsval = 0;
 
@@ -209,7 +208,6 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
         //     break;
 
         case SYNC_POSITION:
-            bufindex = 0;
 
 
             ReportData->Button = 0;
@@ -233,19 +231,39 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
             {
 
                 case UP:
-                    ReportData->LY = STICK_MIN;                
+                    ReportData->LY = STICK_MIN;
                     break;
 
                 case LEFT:
-                    ReportData->LX = STICK_MIN;                
+                    ReportData->LX = STICK_MIN;
                     break;
 
                 case DOWN:
-                    ReportData->LY = STICK_MAX;                
+                    ReportData->LY = STICK_MAX;
                     break;
 
                 case RIGHT:
-                    ReportData->LX = STICK_MAX;                
+                    ReportData->LX = STICK_MAX;
+                    break;
+
+                case UP_LEFT:
+                    ReportData->LY = STICK_MIN;
+                    ReportData->LX = STICK_MIN;
+                    break;
+
+                case UP_RIGHT:
+                    ReportData->LY = STICK_MIN;
+                    ReportData->LX = STICK_MAX;
+                    break;
+
+                case DOWN_LEFT:
+                    ReportData->LY = STICK_MAX;
+                    ReportData->LX = STICK_MIN;
+                    break;
+
+                case DOWN_RIGHT:
+                    ReportData->LX = STICK_MAX;
+                    ReportData->LX = STICK_MAX;
                     break;
 
                 case A:
@@ -254,6 +272,14 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
                 case B:
                     ReportData->Button |= SWITCH_B;
+                    break;
+
+                case X:
+                    ReportData->Button |= SWITCH_X;
+                    break;
+
+                case Y:
+                    ReportData->Button |= SWITCH_Y;
                     break;
 
                 case L:
@@ -273,7 +299,7 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
                     break;
 
                 case THROW:
-                    ReportData->LY = STICK_MIN;                
+                    ReportData->LY = STICK_MIN;
                     ReportData->Button |= SWITCH_R;
                     break;
 
@@ -310,7 +336,6 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
             if (duration_count > command.duration)
             {
-                bufindex++;
                 duration_count = 0;
 
                 command = GetNextCommand();
