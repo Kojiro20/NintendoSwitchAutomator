@@ -6,7 +6,27 @@
 
 In case you see issues with controller conflicts while in docked mode, try using a USB-C to USB-A adapter in handheld mode. In dock mode, changes in the HDMI connection will briefly make the Switch not respond to incoming USB commands, skipping parts of the sequence. These changes may include turning off the TV, or switching the HDMI input. (Switching to the internal tuner will be OK, if this doesn't trigger a change in the HDMI input.)
 
+#### Compiling and Flashing onto the Arduino Micro++
+
+1) Get AVR tool chain
+  ```bash
+  brew tap osx-cross/avr
+  brew install avr-gcc
+  ```
+
+2) Build
+  ```bash
+  cd </projectroot>
+  make
+  ```
+
+3) Flash (tap the button twice to put it into flash mode)
+  ```bash
+  ./flash.sh
+  ```
+
 #### Compiling and Flashing onto the Teensy 2.0++
+
 Go to the Teensy website and download/install the [Teensy Loader application](https://www.pjrc.com/teensy/loader.html). For Linux, follow their instructions for installing the [GCC Compiler and Tools](https://www.pjrc.com/teensy/gcc.html). For Windows, you will need the [latest AVR toolchain](http://www.atmel.com/tools/atmelavrtoolchainforwindows.aspx) from the Atmel site. See [this issue](https://github.com/LightningStalker/Splatmeme-Printer/issues/10) and [this thread](http://gbatemp.net/threads/how-to-use-shinyquagsires-splatoon-2-post-printer.479497/) on GBAtemp for more information. (Note for Mac users - the AVR MacPack is now called AVR CrossPack. If that does not work, you can try installing `avr-gcc` with `brew`.)
 
 LUFA has been included as a git submodule, so cloning the repo like this:
