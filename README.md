@@ -42,12 +42,13 @@ In case you see issues with controller conflicts while in docked mode, try using
 ##### Windows
 
 1) Install GnuWin's Make http://gnuwin32.sourceforge.net/packages/make.htm
-  - Add `C:\Program Files (x86)\GnuWin32\bin` to your system path
+
+2) Add a few things to your SYSTEM PATH
     - Search for "Environment Variables", open the one in Control Panel
     - Click on "Environment Variables..." button on bottom right
     - In "System variables" select "Path" then click "Edit..."
-    - Paste in `C:\Program Files (x86)\GnuWin32\bin` then save
-2) 
+        - Add `C:\Program Files (x86)\GnuWin32\bin`
+        - Add `C:\Program Files (x86)\Arduino\hardware\tools\avr\bin`
 
 
 
