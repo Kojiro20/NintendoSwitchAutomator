@@ -1,5 +1,5 @@
-#ifndef _AC_MOVEMENT_
-#define _AC_MOVEMENT_
+#ifndef _SCRIPTS_AC_MOVEMENT_
+#define _SCRIPTS_AC_MOVEMENT_
 
 #include <scripts/scripts.h>
 

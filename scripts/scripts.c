@@ -3,40 +3,38 @@
 #include "scripts.h"
 #include "AnimalCrossing/movement.h"
 #include "AnimalCrossing/tools.h"
-// #include "AnimalCrossing/harvestFromTree.h"
+#include "AnimalCrossing/treeStuff.h"
 
 /*
  * The main game script to be executed
  */
 struct Node* loadScript(void) {
-    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* head = initializeNode(NOTHING, 10);
     struct Node* curr = head;
 
-    // move down
-    curr = appendAction(curr, DOWN, 20, 20);
+    // collect stars
+    curr = appendAction(curr, A, 10, 25);
 
-    // face up
-    curr->child = FaceUp();
+    // curr->child = GetShovel();
+    // curr = noOp(curr, 0);
+    // curr->child = GetAxe();
+    // curr = noOp(curr, 0);
+    // curr->child = GetStoneAxe();
+    // curr = noOp(curr, 0);
+    // curr->child = GetNet();
+    // curr = noOp(curr, 0);
 
-    // move left
-    curr = appendAction(curr, LEFT, 20, 20);
+    // curr = noOp(curr, 50);
 
-    // swing axe
-    curr->child = GetAxe();
-    curr = appendAction(curr, A, 5, 50);
-
-    // move up
-    curr = appendAction(curr, UP, 20, 20);
-
-    // face down
-    curr->child = FaceDown();
-
-    // move right
-    curr = appendAction(curr, RIGHT, 20, 20);
-
-    // dig hole
-    curr->child = GetShovel();
-    curr = appendAction(curr, A, 5, 50);
+    // // // get all resources from a tree
+    // curr->child = HarvestFromTree();
+    // curr = noOp(curr, 0);
+    // curr->child = CollectAroundTree();
+    // curr = noOp(curr, 0);
+    
+    // // go left and then repeat
+    // curr->child = FaceLeft();
+    // curr = appendAction(curr, LEFT, 48, 48);
 
     return head;
 }

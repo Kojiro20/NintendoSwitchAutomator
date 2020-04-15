@@ -12,9 +12,9 @@ struct Node* getTool(Tools_t tool) {
     struct Node* head = initializeNode(NOTHING, 0);
     struct Node* curr = head;
 
-    curr = appendAction(curr, PAD_UP, 5, 15);
-    curr = appendAction(curr, tool, 5, 10);
-    curr = appendAction(curr, A, 10, 25);
+    curr = appendAction(curr, PAD_UP, 10, 10);
+    curr = appendAction(curr, tool, 10, 10);
+    curr = appendAction(curr, A, 5, 30);
 
     return head;
 }

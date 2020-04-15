@@ -1,5 +1,5 @@
-#ifndef _AC_TOOLS_
-#define _AC_TOOLS_
+#ifndef _SCRIPTS_AC_TOOLS_
+#define _SCRIPTS_AC_TOOLS_
 
 #include <scripts/scripts.h>
 
