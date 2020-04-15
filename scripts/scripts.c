@@ -13,7 +13,7 @@ struct Node* loadScript(void) {
     struct Node* curr = head;
 
     // collect stars
-    curr = appendAction(curr, A, 10, 25);
+    curr = appendAction(curr, A, 5, 10);
 
     // curr->child = GetShovel();
     // curr = noOp(curr, 0);
