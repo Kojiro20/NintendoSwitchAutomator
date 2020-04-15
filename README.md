@@ -6,7 +6,20 @@
 
 In case you see issues with controller conflicts while in docked mode, try using a USB-C to USB-A adapter in handheld mode. In dock mode, changes in the HDMI connection will briefly make the Switch not respond to incoming USB commands, skipping parts of the sequence. These changes may include turning off the TV, or switching the HDMI input. (Switching to the internal tuner will be OK, if this doesn't trigger a change in the HDMI input.)
 
-#### Compiling and Flashing onto the Arduino Micro++
+#### Pre-reqs
+1) Clone this repo
+
+2) Initialize sub modules (or manually clone lufa)
+  ```bash
+  # from project root
+  git clone https://github.com/abcminiuser/lufa.git
+  # or
+  git clone --recursive git@github.com:bertrandom/snowball-thrower.git
+  ```
+  
+3) Install Arduino IDE https://www.arduino.cc/en/Main/Software
+
+#### Compiling and Flashing onto the Arduino Micro
 
 1) Get AVR tool chain
   ```bash
@@ -14,25 +27,30 @@ In case you see issues with controller conflicts while in docked mode, try using
   brew install avr-gcc
   ```
 
-1) Initialize sub modules (or manually clone lufa)
-  ```bash
-  # from project root
-  git clone https://github.com/abcminiuser/lufa.git
-  # or
-  git clone --recursive git@github.com:bertrandom/snowball-thrower.git
-  ```
-
-1) Build
+2) Build
   ```bash
   # from project root
   make
   ```
 
-1) Flash (tap the button twice to put it into flash mode)
+3) Flash (tap the button twice to put it into flash mode)
   ```bash
   # from project root
   ./flash.sh
   ```
+  
+##### Windows
+
+1) Install GnuWin's Make http://gnuwin32.sourceforge.net/packages/make.htm
+  - Add `C:\Program Files (x86)\GnuWin32\bin` to your system path
+    - Search for "Environment Variables", open the one in Control Panel
+    - Click on "Environment Variables..." button on bottom right
+    - In "System variables" select "Path" then click "Edit..."
+    - Paste in `C:\Program Files (x86)\GnuWin32\bin` then save
+2) 
+
+
+
 
 #### Compiling and Flashing onto the Teensy 2.0++
 
