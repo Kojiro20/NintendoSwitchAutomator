@@ -4,6 +4,13 @@
 #include <stdint.h>
 #include "common.h"
 
+/*
+ * Internal scripting tools. Anything generic to all games would go here.
+ * Game-specific macros belong in subfolders.
+ */
+
+// TODO: it should be possible to add a 'repeat' field to nodes
+// allowing things to be repeated without extra memory use.
 struct Node {
     Command command;
     // int repeats;

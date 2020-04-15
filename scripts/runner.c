@@ -9,12 +9,22 @@ static struct Node* curr = NULL;
 static struct Node* stack[STACK_DEPTH];
 static int stackIndex = 0;
 
+/*
+ * This is called once by joystick as the program initializes
+ */
 void InitializeGameScript(void) {
     stackIndex = 0;
     head = loadScript();
 }
 
+/*
+ * This is called in the run-loop each time the joystick is ready
+ * for a new command. It traverses a nested linked list, visiting
+ * the current node - all children, then the next node.
+ */
 Command GetNextCommand(void) {
+
+    // scan for the next non-empty next pointer on the stack
     while (curr == NULL) {
         if (stackIndex == 0) {
             curr = head; // reset if we reached the end, this could also stop

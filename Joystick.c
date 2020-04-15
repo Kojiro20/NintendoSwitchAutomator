@@ -229,6 +229,8 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
             switch (command.button)
             {
+                // TODO: need to add right-stick support
+                // the right stick is ReportData->RX/RY
 
                 case UP:
                     ReportData->LY = STICK_MIN;

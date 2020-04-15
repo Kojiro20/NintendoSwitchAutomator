@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+/*
+ * Common definitions (needed between scripts and the joystick)
+ */
+
 typedef enum {
     UP,
     DOWN,

@@ -12,6 +12,7 @@ struct Node* getTool(Tools_t tool) {
     struct Node* head = initializeNode(NOTHING, 0);
     struct Node* curr = head;
 
+    // TODO: need to find the smallest delay times where this is reliable
     curr = appendAction(curr, PAD_UP, 10, 10);
     curr = appendAction(curr, tool, 10, 10);
     curr = appendAction(curr, A, 5, 30);
