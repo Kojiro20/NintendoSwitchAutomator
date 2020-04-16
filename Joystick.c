@@ -21,24 +21,38 @@ these buttons for our use.
 #include "Joystick.h"
 
 static Command command = { NOTHING, 10 };
-static bool running = false;
 
 // Main entry point.
 int main(void) {
+    bool running = false;
+    unsigned short scriptNum = 0;
+    time_t lastButtonPressTime = time(NULL);
+
     // We'll start by performing hardware and peripheral setup.
     SetupHardware();
     // We'll then enable global interrupts for our use.
     GlobalInterruptEnable();
-    // Initialize the game script. TODO: set this when button is pressed Buttons_GetStatus.
-    InitializeGameScript();
     // Once that's done, we'll enter an infinite loop.
     for (;;)
     {
         // If the button attached to any digital pin 0 to 7 is pressed, toggle running state
+        // TODO: See if Buttons_GetStatus can be used instead
         if (PIND) {
-            running = !running;
+            lastButtonPressTime = time(NULL);
+            if (running) {
+                running = false;
+                scriptNum = 0;
+            } else {
+                scriptNum++;
+            }
             _delay_ms(250);
         }
+
+        if (!running && scriptNum > 0 && (time(NULL) - lastButtonPressTime) > 1) {
+            running = true;
+            InitializeGameScript(); // TODO: pass scriptNum param
+        }
+
         if (running) {
             // We need to run our task to process and deliver data for our IN and OUT endpoints.
             HID_Task();
