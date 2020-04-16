@@ -26,7 +26,8 @@ static Command command = { NOTHING, 10 };
 int main(void) {
     bool running = false;
     unsigned short scriptNum = 0;
-    time_t lastButtonPressTime = time(NULL);
+    clock_init();
+    clock_time_t lastButtonPressTime = clock_time();
 
     // We'll start by performing hardware and peripheral setup.
     SetupHardware();
@@ -38,7 +39,7 @@ int main(void) {
         // If the button attached to any digital pin 0 to 7 is pressed, toggle running state
         // TODO: See if Buttons_GetStatus can be used instead
         if (PIND) {
-            lastButtonPressTime = time(NULL);
+            lastButtonPressTime = clock_time();
             if (running) {
                 running = false;
                 scriptNum = 0;
@@ -48,7 +49,7 @@ int main(void) {
             _delay_ms(250);
         }
 
-        if (!running && scriptNum > 0 && (time(NULL) - lastButtonPressTime) > 1) {
+        if (!running && scriptNum > 0 && (clock_time() - lastButtonPressTime) > 100) {
             running = true;
             InitializeGameScript(); // TODO: pass scriptNum param
         }
