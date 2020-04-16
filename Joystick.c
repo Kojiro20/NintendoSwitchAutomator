@@ -21,6 +21,7 @@ these buttons for our use.
 #include "Joystick.h"
 
 static Command command = { NOTHING, 10 };
+static bool running = false;
 
 // Main entry point.
 int main(void) {
@@ -33,8 +34,18 @@ int main(void) {
     // Once that's done, we'll enter an infinite loop.
     for (;;)
     {
-        // We need to run our task to process and deliver data for our IN and OUT endpoints.
-        HID_Task();
+        // If the button attached to any digital pin 0 to 7 is pressed, toggle running state
+        if (PIND) {
+            running = !running;
+            _delay_ms(250);
+        }
+        if (running) {
+            // We need to run our task to process and deliver data for our IN and OUT endpoints.
+            HID_Task();
+            PORTB = 0xFF; // turn on LED
+        } else {
+            PORTB = 0x0; // turn off LED
+        }
         // We also need to run the main USB management task.
         USB_USBTask();
     }
@@ -50,7 +61,6 @@ void SetupHardware(void) {
     clock_prescale_set(clock_div_1);
     // We can then initialize our hardware and peripherals, including the USB stack.
 
-    #ifdef ALERT_WHEN_DONE
     // Both PORTD and PORTB will be used for the optional LED flashing and buzzer.
     #warning LED and Buzzer functionality enabled. All pins on both PORTB and \
 PORTD will toggle when printing is done.
@@ -59,7 +69,6 @@ PORTD will toggle when printing is done.
                   //We'll just flash all pins on both ports since the UNO R3
     DDRB  = 0xFF; //uses PORTB. Micro can use either or, but both give us 2 LEDs
     PORTB =  0x0; //The ATmega328P on the UNO will be resetting, so unplug it?
-    #endif
     // The USB stack should be initialized last.
     USB_Init();
 }
