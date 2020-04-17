@@ -51,7 +51,7 @@ int main(void) {
 
         if (!running && scriptNum > 0 && (clock_time() - lastButtonPressTime) > 100) {
             running = true;
-            InitializeGameScript(); // TODO: pass scriptNum param
+            InitializeGameScript(scriptNum);
         }
 
         if (running) {

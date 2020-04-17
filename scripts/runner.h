@@ -11,6 +11,6 @@
  */
 
 Command GetNextCommand(void);
-void InitializeGameScript(void);
+void InitializeGameScript(int scriptNum);
 
 #endif

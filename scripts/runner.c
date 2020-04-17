@@ -12,9 +12,10 @@ static int stackIndex = 0;
 /*
  * This is called once by joystick as the program initializes
  */
-void InitializeGameScript(void) {
+void InitializeGameScript(int scriptNum) {
     stackIndex = 0;
-    head = loadScript();
+    head = loadScript(scriptNum);
+    curr = NULL;
 }
 
 /*
