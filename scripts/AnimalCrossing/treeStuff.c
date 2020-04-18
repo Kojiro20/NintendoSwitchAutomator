@@ -6,9 +6,9 @@
 
 static struct Node* harvestFromTree = NULL;
 static struct Node* collectAroundTree = NULL;
-static int shakeTime = 35;
-static int pickupTime = 25;
-static int movementDist = 1;
+static int shakeTime = 30;
+static int pickupTime = 30;
+static int movementDist = 13;
 
 struct Node* HarvestFromTree(void) {
     if (harvestFromTree == NULL) {
@@ -21,26 +21,6 @@ struct Node* HarvestFromTree(void) {
         // shake tree
         curr->child = FaceUp();
         curr = appendAction(curr, A, 15, shakeTime);
-
-        // catch wasps if any fell
-        curr->child = GetNet();
-        curr = appendAction(curr, A, 15, shakeTime);
-        curr = appendAction(curr, PAD_DOWN, 10, 20);
-
-        // shake 3 more times
-        curr->child = FaceUp();
-        for (int i = 0; i < 3; i++) {
-            curr = appendAction(curr, A, 5, shakeTime);
-        }
-
-        // chop 3 times with stone axe
-        curr = noOp(curr, 10);
-        curr->child = GetStoneAxe();
-        curr = noOp(curr, 10);
-        curr->child = FaceUp();
-        for (int i = 0; i < 3; i++) {
-            curr = appendAction(curr, A, 5, shakeTime);
-        }
     }
 
     return harvestFromTree;
@@ -51,41 +31,30 @@ struct Node* CollectAroundTree(void) {
         collectAroundTree = initializeNode(NOTHING, 0);
         struct Node* curr = collectAroundTree;
 
-        // put tool away
-        curr = appendAction(curr, PAD_DOWN, 10, 20);
-
         // pick up anything
+        curr = appendAction(curr, Y, 5, 5);
         curr = appendAction(curr, Y, 5, pickupTime);
 
-        // go left once
+        // go to next fruit
         curr->child = FaceLeft();
         curr = appendAction(curr, LEFT, movementDist, movementDist);
-        curr = appendAction(curr, Y, 5, pickupTime);
-
-        // go up twice
         curr->child = FaceUp();
         curr = appendAction(curr, UP, movementDist, movementDist);
         curr = appendAction(curr, Y, 5, pickupTime);
-        curr = appendAction(curr, UP, movementDist, movementDist);
-        curr = appendAction(curr, Y, 5, pickupTime);
 
-        // go right twice
+        // go to last fruit
+        curr = appendAction(curr, UP, movementDist, movementDist);
         curr->child = FaceRight();
         curr = appendAction(curr, RIGHT, movementDist, movementDist);
-        curr = appendAction(curr, Y, 5, pickupTime);
         curr = appendAction(curr, RIGHT, movementDist, movementDist);
-        curr = appendAction(curr, Y, 5, pickupTime);
-
-        // go down twice
         curr->child = FaceDown();
         curr = appendAction(curr, DOWN, movementDist, movementDist);
         curr = appendAction(curr, Y, 5, pickupTime);
-        curr = appendAction(curr, DOWN, movementDist, movementDist);
-        curr = appendAction(curr, Y, 5, pickupTime);
 
-        // go back to starting position
+        // go back to front
+        curr = appendAction(curr, DOWN, movementDist, movementDist);
         curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 16, 16);
+        curr = appendAction(curr, LEFT, movementDist, movementDist);
     }
 
     return collectAroundTree;

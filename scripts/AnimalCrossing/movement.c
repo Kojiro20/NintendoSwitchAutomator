@@ -14,7 +14,7 @@ struct Node* faceDir(Buttons_t direction) {
 
     // avoid moving while turning
     // there is a rotational pivot effect when you turn
-    int delay = 2;
+    int delay = 1;
     for (int i = 0; i < 5; i++) {
         curr = appendAction(curr, direction, delay, 0);
     }

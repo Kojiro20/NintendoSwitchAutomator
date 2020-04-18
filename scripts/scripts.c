@@ -18,26 +18,15 @@ struct Node* loadScript(int scriptNum) {
             curr = appendAction(curr, A, 5, 10);
             break;
         case 2:
-            curr->child = GetShovel();
-            curr = noOp(curr, 0);
-            curr->child = GetAxe();
-            curr = noOp(curr, 0);
-            curr->child = GetStoneAxe();
-            curr = noOp(curr, 0);
-            curr->child = GetNet();
-            curr = noOp(curr, 0);
-
-            curr = noOp(curr, 50);
-
-            // get all resources from a tree
+            
+            // collect from a tree immediately in front of character
             curr->child = HarvestFromTree();
             curr = noOp(curr, 0);
             curr->child = CollectAroundTree();
             curr = noOp(curr, 0);
             
             // go left and then repeat
-            curr->child = FaceLeft();
-            curr = appendAction(curr, LEFT, 48, 48);
+            curr = appendAction(curr, LEFT, 24, 28);
             break;
         default:
             // collect stars
