@@ -14,7 +14,7 @@ static int stackIndex = 0;
 /*
  * This is called once by joystick as the program initializes
  */
-void InitializeGameScripts(int scriptNum) {
+void InitializeGameScripts() {
     stackIndex = 0;
 
     // avoid null refs, default to reset state
