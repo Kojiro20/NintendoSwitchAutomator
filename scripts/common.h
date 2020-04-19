@@ -24,6 +24,8 @@ typedef enum {
     R,
     ZL,
     ZR,
+    MINUS,
+    PLUS,
     THROW,
     NOTHING,
     TRIGGERS,
