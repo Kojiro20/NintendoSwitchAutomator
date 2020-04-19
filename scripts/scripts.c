@@ -6,38 +6,40 @@
 #include "AnimalCrossing/treeStuff.h"
 
 /*
- * The main game script to be executed
+ * The main game scripts to be executed
  */
-struct Node* loadScript(int scriptNum) {
-    struct Node* head = initializeNode(NOTHING, 10);
-    struct Node* curr = head;
-
-    int rows = 3;
-    int cols = 3;
-
-    switch (scriptNum) {
-        case 1:
-            // collect stars
-            curr = appendAction(curr, A, 5, 10);
-            break;
-        case 2:
-
-            curr->child = HarvestFruitGrid(3, 10);
-            curr = noOp(curr, 10000000);
-
-            break;
-
-        case 3:
-            curr = appendAction(curr, B, 5, 10);
-            curr = appendAction(curr, PAD_DOWN, 5, 10);
-            curr->child = RunInCircle();
-        default:
-            // collect stars
-            curr->child = RunInCircle();
-    }
-
+struct Node* loadReset() {
+    struct Node* head = initializeNode(NOTHING, 0);
+    appendAction(head, NOTHING, 5, 25);
     return head;
 }
+
+struct Node* loadButtonMash() {
+    struct Node* head = initializeNode(NOTHING, 0);
+    appendAction(head, A, 5, 10);
+    return head;
+}
+
+// struct Node* loadHarvestGrid(int rows, int cols) {
+//     struct Node* head = initializeNode(NOTHING, 0);
+//     struct Node* curr = head;
+    
+//     curr->child = StowToolReset();
+//     curr = noOp(curr, 15);
+//     curr->child = HarvestFruitGrid(rows, cols);
+//     curr = noOp(curr, 10000000);
+//     return head;
+// }
+
+// struct Node* loadBranchSeller() {
+//     struct Node* head = initializeNode(NOTHING, 0);
+//     struct Node* curr = head;
+    
+//     curr->child = StowToolReset();
+//     curr = noOp(curr, 15);
+//     curr->child = ShakeTreeAndSellBranches();
+//     return head;
+// }
 
 /*
  * Helper to initialize new nodes

@@ -3,19 +3,43 @@
 #include "scripts.h"
 
 #define STACK_DEPTH 5
+#define SCRIPT_COUNT 5
 
 static struct Node* head = NULL;
 static struct Node* curr = NULL;
+static struct Node* scripts[SCRIPT_COUNT];
 static struct Node* stack[STACK_DEPTH];
 static int stackIndex = 0;
 
 /*
  * This is called once by joystick as the program initializes
  */
-void InitializeGameScript(int scriptNum) {
+void InitializeGameScripts(int scriptNum) {
     stackIndex = 0;
-    head = loadScript(scriptNum);
+
+    // avoid null refs, default to reset state
+    struct Node* reset = loadReset();
+    for (int i = 0; i < SCRIPT_COUNT; i++) {
+        scripts[i] = reset;
+    }
+
+    // initialize scripts
+    scripts[1] = loadButtonMash();
+    // scripts[2] = loadHarvestGrid(3, 10);
+    // scripts[2] = loadBranchSeller();
+}
+
+/*
+ * This is called each time a new script is selected
+ */
+void SelectScript(int scriptNum) {
+    if (scriptNum >= SCRIPT_COUNT) {
+        scriptNum == 0;
+    }
+
+    head = scripts[scriptNum];
     curr = NULL;
+    stackIndex = 0;
 }
 
 /*

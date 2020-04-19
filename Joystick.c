@@ -28,6 +28,8 @@ int main(void) {
     unsigned short scriptNum = 0;
     clock_init();
     clock_time_t lastButtonPressTime = clock_time();
+    InitializeGameScripts();
+    SelectScript(0);
 
     // We'll start by performing hardware and peripheral setup.
     SetupHardware();
@@ -43,6 +45,7 @@ int main(void) {
             if (running) {
                 running = false;
                 scriptNum = 0;
+                SelectScript(scriptNum);
             } else {
                 scriptNum++;
             }
@@ -51,16 +54,18 @@ int main(void) {
 
         if (!running && scriptNum > 0 && (clock_time() - lastButtonPressTime) > 100) {
             running = true;
-            InitializeGameScript(scriptNum);
+            SelectScript(scriptNum);
         }
 
         if (running) {
-            // We need to run our task to process and deliver data for our IN and OUT endpoints.
-            HID_Task();
             PORTB = 0xFF; // turn on LED
         } else {
             PORTB = 0x0; // turn off LED
         }
+
+        // We need to run our task to process and deliver data for our IN and OUT endpoints.
+        HID_Task();
+
         // We also need to run the main USB management task.
         USB_USBTask();
     }
