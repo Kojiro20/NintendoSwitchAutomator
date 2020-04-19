@@ -16,8 +16,8 @@ struct Node* faceDir(Buttons_t direction) {
     // avoid moving while turning
     // there is a rotational pivot effect when you turn
     int delay = 1;
-    for (int i = 0; i < 6; i++) {
-        curr = appendAction(curr, direction, delay, 0);
+    for (int i = 0; i < 7; i++) {
+        curr = appendAction(curr, direction, delay, 1);
     }
 
     return head;
@@ -53,6 +53,34 @@ struct Node* FaceRight() {
     }
 
     return faceRight;
+}
+
+/*
+ * Note, this is not cached due to inputs
+ */
+struct Node* MoveDistInDir(int dist, int offset, Buttons_t direction) {
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
+
+    switch (direction)
+    {
+        case UP:
+            head->child = FaceUp();
+            break;
+        case DOWN:
+            head->child = FaceDown();
+            break;
+        case LEFT:
+            head->child = FaceLeft();
+            break;
+        case RIGHT:
+            head->child = FaceRight();
+            break;
+    }
+
+    int gridSpaceDelay = dist * 13 + offset;
+    curr = appendAction(curr, direction, gridSpaceDelay, gridSpaceDelay);
+    return head;
 }
 
 struct Node* RunInCircle() {

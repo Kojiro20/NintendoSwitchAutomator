@@ -20,26 +20,26 @@ struct Node* loadButtonMash() {
     return head;
 }
 
-// struct Node* loadHarvestGrid(int rows, int cols) {
-//     struct Node* head = initializeNode(NOTHING, 0);
-//     struct Node* curr = head;
+struct Node* loadHarvestGrid(int rows, int cols) {
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
     
-//     curr->child = StowToolReset();
-//     curr = noOp(curr, 15);
-//     curr->child = HarvestFruitGrid(rows, cols);
-//     curr = noOp(curr, 10000000);
-//     return head;
-// }
+    curr->child = StowToolReset();
+    curr = noOp(curr, 15);
+    curr->child = HarvestFruitGrid(rows, cols);
+    curr = noOp(curr, 10000000);
+    return head;
+}
 
-// struct Node* loadBranchSeller() {
-//     struct Node* head = initializeNode(NOTHING, 0);
-//     struct Node* curr = head;
+struct Node* loadBranchSeller() {
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
     
-//     curr->child = StowToolReset();
-//     curr = noOp(curr, 15);
-//     curr->child = ShakeTreeAndSellBranches();
-//     return head;
-// }
+    curr->child = StowToolReset();
+    curr = noOp(curr, 15);
+    curr->child = ShakeTreeAndSellBranches();
+    return head;
+}
 
 /*
  * Helper to initialize new nodes

@@ -8,5 +8,6 @@ struct Node* FaceDown(void);
 struct Node* FaceLeft(void);
 struct Node* FaceRight(void);
 struct Node* RunInCircle(void);
+struct Node* MoveDistInDir(int spaces, int offset, Buttons_t direction);
 
 #endif

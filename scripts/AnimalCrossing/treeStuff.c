@@ -123,3 +123,87 @@ struct Node* HarvestFruitGrid(int rows, int cols) {
 
     return head;
 }
+
+/*
+ * Shakes a tree nearby nooks crany and sells branches
+ * T=Tree
+ * D=DropBox
+ * Y=You, starting position
+ * 
+ *   T
+ *       +-----+
+ * --+   |D[  ]|
+ *   |   |Y    |
+ *   |          
+ */
+struct Node* ShakeTreeAndSellBranches() {
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
+
+    // go to tree
+    curr->child = MoveDistInDir(1, 0, DOWN);
+    curr = noOp(curr, 0);
+    curr->child = MoveDistInDir(2, 0, LEFT);
+    curr = noOp(curr, 0);
+    curr->child = MoveDistInDir(4, 4, UP);
+    curr = noOp(curr, 0);
+    curr->child = MoveDistInDir(1, 0, LEFT);
+    curr = noOp(curr, 0);
+
+    // shake tree
+    curr = appendAction(curr, PAD_DOWN, 5, 15);
+    for (int i = 0; i < 30; i++) {
+        curr = appendAction(curr, A, 5, 29);
+    }
+
+    // pick up branches
+    int collectTime = 15;
+    curr->child = MoveDistInDir(2, -5, DOWN);
+    curr = noOp(curr, 0);
+    curr->child = FaceLeft();
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, 0, LEFT);
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, -3, LEFT);
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, -3, LEFT);
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = FaceUp();
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, -3, UP);
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, -3, UP);
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = FaceRight();
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, 0, RIGHT);
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = FaceDown();
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, 0, DOWN);
+    curr = appendAction(curr, Y, 5, collectTime);
+    curr->child = MoveDistInDir(1, 0, RIGHT);
+    curr = appendAction(curr, Y, 5, collectTime);
+
+    // go back to drop box
+    curr->child = MoveDistInDir(2, 0, RIGHT);
+    curr = noOp(curr, 0);
+    curr->child = MoveDistInDir(3, 5, DOWN);
+    curr = noOp(curr, 0);
+    curr->child = MoveDistInDir(2, -3, RIGHT);
+    curr = noOp(curr, 0);
+    curr->child = MoveDistInDir(1, 10, UP);
+    curr = noOp(curr, 0);
+
+    // sell items
+    curr = appendAction(curr, A, 5, 50); // dailog - yes I want to use the box
+    curr = appendAction(curr, A, 5, 25);
+    curr = appendAction(curr, A, 5, 25);
+    curr = appendAction(curr, A, 5, 25);
+    curr = appendAction(curr, A, 5, 25);
+    curr = appendAction(curr, A, 5, 25);
+    curr = appendAction(curr, PLUS, 5, 25); // confirm
+    curr = appendAction(curr, A, 5, 25); // yes, sell
+
+    return head;
+}

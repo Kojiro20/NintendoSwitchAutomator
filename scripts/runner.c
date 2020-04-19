@@ -26,7 +26,7 @@ void InitializeGameScripts(int scriptNum) {
     // initialize scripts
     scripts[1] = loadButtonMash();
     // scripts[2] = loadHarvestGrid(3, 10);
-    // scripts[2] = loadBranchSeller();
+    scripts[2] = loadBranchSeller();
 }
 
 /*
