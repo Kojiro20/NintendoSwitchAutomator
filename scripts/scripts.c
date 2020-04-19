@@ -12,25 +12,28 @@ struct Node* loadScript(int scriptNum) {
     struct Node* head = initializeNode(NOTHING, 10);
     struct Node* curr = head;
 
+    int rows = 3;
+    int cols = 3;
+
     switch (scriptNum) {
         case 1:
             // collect stars
             curr = appendAction(curr, A, 5, 10);
             break;
         case 2:
-            
-            // collect from a tree immediately in front of character
-            curr->child = HarvestFromTree();
-            curr = noOp(curr, 0);
-            curr->child = CollectAroundTree();
-            curr = noOp(curr, 0);
-            
-            // go left and then repeat
-            curr = appendAction(curr, LEFT, 24, 28);
+
+            curr->child = HarvestFruitGrid(3, 10);
+            curr = noOp(curr, 10000000);
+
             break;
+
+        case 3:
+            curr = appendAction(curr, B, 5, 10);
+            curr = appendAction(curr, PAD_DOWN, 5, 10);
+            curr->child = RunInCircle();
         default:
             // collect stars
-            curr = appendAction(curr, A, 5, 10);
+            curr->child = RunInCircle();
     }
 
     return head;

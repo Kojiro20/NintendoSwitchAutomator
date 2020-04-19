@@ -7,6 +7,7 @@ static struct Node* faceUp = NULL;
 static struct Node* faceDown = NULL;
 static struct Node* faceLeft = NULL;
 static struct Node* faceRight = NULL;
+static struct Node* runInCircle = NULL;
 
 struct Node* faceDir(Buttons_t direction) {
     struct Node* head = initializeNode(NOTHING, 0);
@@ -15,7 +16,7 @@ struct Node* faceDir(Buttons_t direction) {
     // avoid moving while turning
     // there is a rotational pivot effect when you turn
     int delay = 1;
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 6; i++) {
         curr = appendAction(curr, direction, delay, 0);
     }
 
@@ -52,4 +53,24 @@ struct Node* FaceRight() {
     }
 
     return faceRight;
+}
+
+struct Node* RunInCircle() {
+    if (runInCircle == NULL) {
+        runInCircle = initializeNode(NOTHING, 0);
+        struct Node* curr = runInCircle;
+
+        int dist = 50;
+
+        curr->child = FaceLeft();
+        curr = appendAction(curr, LEFT, dist, 0);
+        curr->child = FaceDown();
+        curr = appendAction(curr, DOWN, dist, 0);
+        curr->child = FaceRight();
+        curr = appendAction(curr, RIGHT, dist, 0);
+        curr->child = FaceUp();
+        curr = appendAction(curr, UP, dist, 0);
+    }
+
+    return runInCircle;
 }

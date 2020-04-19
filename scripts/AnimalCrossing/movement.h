@@ -7,5 +7,6 @@ struct Node* FaceUp(void);
 struct Node* FaceDown(void);
 struct Node* FaceLeft(void);
 struct Node* FaceRight(void);
+struct Node* RunInCircle(void);
 
 #endif
