@@ -141,4 +141,4 @@ Thanks to Shiny Quagsire for his [Splatoon post printer](https://github.com/shin
 
 Thanks to [exsilium](https://github.com/bertrandom/snowball-thrower/pull/1) for improving the command structure, optimizing the waiting times, and handling the failure scenarios. It can now run indefinitely!
 
-Thanks to Nick Gammon for his post on using Arduino as a programmer [Atmega bootloader programmer](https://www.gammon.com.au/bootloader).
+Thanks to Nick Gammon for his post on using Arduino as an [Atmega bootloader programmer](https://www.gammon.com.au/bootloader).
