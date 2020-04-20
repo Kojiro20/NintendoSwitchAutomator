@@ -4,6 +4,7 @@
 #include "AnimalCrossing/movement.h"
 #include "AnimalCrossing/tools.h"
 #include "AnimalCrossing/treeStuff.h"
+#include "AnimalCrossing/shop.h"
 
 /*
  * The main game scripts to be executed
@@ -38,6 +39,27 @@ struct Node* loadBranchSeller() {
     curr->child = StowToolReset();
     curr = noOp(curr, 15);
     curr->child = ShakeTreeAndSellBranches();
+    return head;
+}
+
+struct Node* loadBuyBulk() {
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
+
+    curr->child = BuyBulk();
+
+    return head;
+}
+
+struct Node* loadSelectBulk() {
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
+
+    curr->child = SelectBulk();
+    // TODO: Figure out another way to make a script stop running,
+    // the long NOOP blocks the next script from starting
+    curr = noOp(curr, 10000000);
+
     return head;
 }
 

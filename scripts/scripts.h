@@ -22,6 +22,8 @@ struct Node* loadReset();
 struct Node* loadButtonMash();
 struct Node* loadHarvestGrid(int rows, int cols);
 struct Node* loadBranchSeller();
+struct Node* loadBuyBulk();
+struct Node* loadSelectBulk();
 struct Node* loadScript(int scriptNum);
 struct Node* initializeNode(Buttons_t button, uint16_t duration);
 struct Node* appendAction(struct Node* curr, Buttons_t button, uint16_t duration, uint16_t waitTime);

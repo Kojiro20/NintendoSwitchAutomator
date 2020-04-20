@@ -27,6 +27,8 @@ void InitializeGameScripts() {
     scripts[1] = loadButtonMash();
     // scripts[2] = loadHarvestGrid(3, 10);
     scripts[2] = loadBranchSeller();
+    // scripts[2] = loadBuyBulk();
+    // scripts[3] = loadSelectBulk();
 }
 
 /*
