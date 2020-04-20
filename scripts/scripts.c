@@ -28,7 +28,7 @@ struct Node* loadHarvestGrid(int rows, int cols) {
     curr->child = StowToolReset();
     curr = noOp(curr, 15);
     curr->child = HarvestFruitGrid(rows, cols);
-    curr = noOp(curr, 10000000);
+    stop(curr);
     return head;
 }
 
@@ -56,9 +56,7 @@ struct Node* loadSelectBulk() {
     struct Node* curr = head;
 
     curr->child = SelectBulk();
-    // TODO: Figure out another way to make a script stop running,
-    // the long NOOP blocks the next script from starting
-    curr = noOp(curr, 10000000);
+    stop(curr);
 
     return head;
 }
@@ -83,6 +81,11 @@ struct Node* appendAction(struct Node* curr, Buttons_t button, uint16_t duration
 
     // follow each action with a no-op to reset joystick and buttons
     return noOp(next, waitTime);
+}
+
+void stop(struct Node* curr) {
+    curr = noOp(curr, 50);
+    curr->next = curr;
 }
 
 /*

@@ -28,5 +28,6 @@ struct Node* loadScript(int scriptNum);
 struct Node* initializeNode(Buttons_t button, uint16_t duration);
 struct Node* appendAction(struct Node* curr, Buttons_t button, uint16_t duration, uint16_t waitTime);
 struct Node* noOp(struct Node* curr, uint16_t waitTime);
+void stop(struct Node* curr);
 
 #endif
