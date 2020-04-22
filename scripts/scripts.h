@@ -22,6 +22,7 @@ struct Node* loadReset();
 struct Node* loadButtonMash();
 struct Node* loadHarvestGrid(int rows, int cols);
 struct Node* loadBranchSeller();
+struct Node* loadBranchCollector();
 struct Node* loadBuyBulk();
 struct Node* loadSelectBulk();
 struct Node* loadScript(int scriptNum);

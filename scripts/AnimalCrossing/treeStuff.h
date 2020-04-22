@@ -5,6 +5,7 @@ struct Node* HarvestFromTree(void);
 struct Node* CollectAroundTree(void);
 struct Node* GoToTreeAbove(void);
 struct Node* HarvestFruitGrid(int rows, int cols);
+struct Node* ShakeTreeAndCollect();
 struct Node* ShakeTreeAndSellBranches();
 
 #endif

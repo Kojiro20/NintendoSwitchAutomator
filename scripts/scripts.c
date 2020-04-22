@@ -32,6 +32,14 @@ struct Node* loadHarvestGrid(int rows, int cols) {
     return head;
 }
 
+struct Node* loadBranchCollector() {
+    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* curr = head;
+    
+    curr->child = ShakeTreeAndCollect();
+    return head;
+}
+
 struct Node* loadBranchSeller() {
     struct Node* head = initializeNode(NOTHING, 0);
     struct Node* curr = head;
