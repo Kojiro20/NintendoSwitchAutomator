@@ -14,15 +14,18 @@ struct Node* BuyBulk() {
         // TODO: figure out a way to make this loop work (seems the 60 is too large)
         // for (int i = 0; i < 60; i++) {
             // Select item to buy
-            curr = appendAction(curr, A, 5, 85);
+            curr = appendAction(curr, A, 5, 5);
+            curr = appendAction(curr, B, 35, 0);
             // I can sell in singles or bulk, how many would you like
             curr = appendAction(curr, A, 5, 5);
             // Show choices
             curr = appendAction(curr, DOWN, 10, 0);
             // I'll take 5
-            curr = appendAction(curr, A, 5, 70);
+            curr = appendAction(curr, A, 5, 5);
+            curr = appendAction(curr, B, 35, 0);
             // Excellent purchase! ...purchase!
-            curr = appendAction(curr, A, 5, 40);
+            curr = appendAction(curr, A, 5, 5);
+            curr = appendAction(curr, B, 20, 0);
             // Anything else look interesting?
             curr = appendAction(curr, A, 5, 5);
         // }
