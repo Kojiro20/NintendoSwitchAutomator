@@ -17,7 +17,7 @@ struct Node* loadReset() {
 
 struct Node* loadButtonMash() {
     struct Node* head = initializeNode(NOTHING, 0);
-    appendAction(head, A, 5, 10);
+    appendAction(head, A, 5, 0);
     return head;
 }
 
