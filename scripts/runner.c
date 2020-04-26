@@ -2,8 +2,8 @@
 #include "common.h"
 #include "scripts.h"
 
-#define STACK_DEPTH 5
-#define SCRIPT_COUNT 5
+#define STACK_DEPTH 10
+#define SCRIPT_COUNT 10
 
 static struct Node* head = NULL;
 static struct Node* curr = NULL;
@@ -17,18 +17,28 @@ static int stackIndex = 0;
 void InitializeGameScripts(void) {
     stackIndex = 0;
 
-    // avoid null refs, default to reset state
-    struct Node* reset = loadReset();
+    // Initialize starting nodes
     for (int i = 0; i < SCRIPT_COUNT; i++) {
-        scripts[i] = reset;
+        scripts[i] = initializeNode(NOTHING, 0);
     }
 
-    // initialize scripts
-    scripts[1] = loadButtonMash();
-    // scripts[2] = loadHarvestGrid(3, 10);
-    scripts[2] = loadBranchCollector();
-    // scripts[2] = loadBuyBulk();
-    // scripts[3] = loadSelectBulk();
+    // Initial entry does nothing and is used as a reset when scripts are off
+    appendAction(scripts[0], NOTHING, 5, 25);
+
+    // One button press: button mash `A`
+    appendAction(scripts[1], NOTHING, 5, 25);
+
+    // Two button presses: shake a tree 30x and collect everything that falls
+    scripts[2]->child = ShakeTreeAndCollect();
+
+    // Three button presses: buy the last purchased item in bulk from nooks crany
+    scripts[3]->child = BuyBulk();
+
+    // Four button presses: select all inventory
+    scripts[4]->child = SelectBulk();
+
+    // Five button presses: collect everything on the ground in a 10x10 starting bottom right
+    // scripts[5] = TBD
 }
 
 /*

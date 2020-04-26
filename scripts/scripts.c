@@ -3,71 +3,8 @@
 #include "scripts.h"
 #include "AnimalCrossing/movement.h"
 #include "AnimalCrossing/tools.h"
-#include "AnimalCrossing/treeStuff.h"
+#include "AnimalCrossing/trees.h"
 #include "AnimalCrossing/shop.h"
-
-/*
- * The main game scripts to be executed
- */
-struct Node* loadReset() {
-    struct Node* head = initializeNode(NOTHING, 0);
-    appendAction(head, NOTHING, 5, 25);
-    return head;
-}
-
-struct Node* loadButtonMash() {
-    struct Node* head = initializeNode(NOTHING, 0);
-    appendAction(head, A, 5, 0);
-    return head;
-}
-
-struct Node* loadHarvestGrid(int rows, int cols) {
-    struct Node* head = initializeNode(NOTHING, 0);
-    struct Node* curr = head;
-    
-    curr->child = StowToolReset();
-    curr = noOp(curr, 15);
-    curr->child = HarvestFruitGrid(rows, cols);
-    stop(curr);
-    return head;
-}
-
-struct Node* loadBranchCollector() {
-    struct Node* head = initializeNode(NOTHING, 0);
-    struct Node* curr = head;
-    
-    curr->child = ShakeTreeAndCollect();
-    return head;
-}
-
-struct Node* loadBranchSeller() {
-    struct Node* head = initializeNode(NOTHING, 0);
-    struct Node* curr = head;
-    
-    curr->child = StowToolReset();
-    curr = noOp(curr, 15);
-    curr->child = ShakeTreeAndSellBranches();
-    return head;
-}
-
-struct Node* loadBuyBulk() {
-    struct Node* head = initializeNode(NOTHING, 0);
-    struct Node* curr = head;
-
-    curr->child = BuyBulk();
-
-    return head;
-}
-
-struct Node* loadSelectBulk() {
-    struct Node* head = initializeNode(NOTHING, 0);
-    struct Node* curr = head;
-
-    curr->child = SelectBulk();
-    stop(curr);
-
-    return head;
-}
 
 /*
  * Helper to initialize new nodes
@@ -91,6 +28,9 @@ struct Node* appendAction(struct Node* curr, Buttons_t button, uint16_t duration
     return noOp(next, waitTime);
 }
 
+/*
+ * Add a noOp cycle to the end
+ */
 void stop(struct Node* curr) {
     curr = noOp(curr, 50);
     curr->next = curr;
