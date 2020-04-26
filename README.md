@@ -16,7 +16,7 @@ In case you see issues with controller conflicts while in docked mode, try using
   # from project root
   git clone https://github.com/abcminiuser/lufa.git
   # or
-  git clone --recursive git@github.com:bertrandom/snowball-thrower.git
+  git clone --recursive <github clone path/>
   ```
   
 3) Install Arduino IDE https://www.arduino.cc/en/Main/Software
@@ -101,35 +101,65 @@ For the Arduino UNO, the easiest place to connect the buzzer is to any pin of JP
 On the Arduino Micro, D0-D3 may be used, or pins 1, 3, or 4 (PORTB) on the ICSP header. Power specs are the same as for the AT90USB1286 used on the Teensy. The TX and RX LEDs are on PORTD and PORTB respectively and draw around 3mA apiece. Do not bridge pins for more current.
 
 ### Using an arduino Uno as an ICSP programmer
-This allows the program to be updated without disconnecting from a switch. [This post](https://www.arduino.cc/en/Tutorial/ArduinoISP) describes the capability in general, but these instructions focus on using an Uno with the ICSP header.
+This allows the program to be updated without disconnecting from a switch. [This post](https://www.arduino.cc/en/Tutorial/ArduinoISP) describes the capability in general, but these instructions focus on using an Arduino Uno with the ICSP header to flash an Arduino Micro.
 
-#### Wiring
-Second, wire the Uno to an Arduino Micro using the ICSP connector. Two pins require special treatment.
- 1. The reset pin needs to be connected to pin 10 of the Uno to avoid a reset loop while programming.
- 1. Since the goal is to keep the target plugged into the switch while reprogramming, do not connect the 5v line. This is needed to flash without connecting to a switch, but if it is connected the boards must share a common ground plane while providing the 5v supply separately.
- 
- 
-![icsp_pinout](https://user-images.githubusercontent.com/8355718/79698237-7de48b80-823c-11ea-9c2d-949cc400f97b.png)
-
-Make the following connections (for reference [Uno pinout](https://user-images.githubusercontent.com/8355718/79698968-2e548e80-8241-11ea-930e-0c57a3cede80.jpg), [Micro pinout](https://user-images.githubusercontent.com/8355718/79698970-314f7f00-8241-11ea-8120-758758949b9d.jpg)):
- - Programmer ICSP MISO -> Target ICSP MISO
- - Programmer ICSP SCK -> Target ICSP SCK
- - Programmer D10 -> Target ICSP RESET (special case 1)
-  - Programmer ICSP GND -> Target ICSP GND
- - Programmer ICSP MOSI -> Target ICSP MOSI
- - Programmer ICSP 5V -> Target ICSP 5V (special case 2)
-
-> Remember to disconnect power when connected to a switch or it will not recognize the device after it is programmed.
-
-##### Configure an Arduino Uno as an ISP
-First, prepare the Uno to act as an ISP. Note, this sketch can drive debug LEDs on digital output pins 7 (data), 8 (error), 9 (heartbeat). It is not necessary to use this feature, but it can help with debugging.
+#### Configure an Arduino Uno as an ISP
+First, prepare the Uno to act as an ISP. Note, this sketch can drive debug LEDs on digital output pins 7 (data), 8 (error), 9 (heartbeat). It is not necessary to use this, but it can help with debugging in case something doesn't work.(https://www.arduino.cc/en/Tutorial/ArduinoISP).
  1. Open the example sketch named ArduinoISP (File -> Examples -> ArduinoISP).
  1. Select the Uno as target board (Tools -> Board -> "Aruino Uno")
  1. Select the correct port (Tools -> Port -> ...).
  1. Upload the sketch.
 
+<details>
+  <summary>Optional Debug Wiring Instructions</summary>
+  <img height=300px src="https://user-images.githubusercontent.com/8355718/80317247-7c284400-87b7-11ea-8606-7bbc960d78b1.jpg">
+
+##### Connections
+  - Connect 220Ω resistor to pin 7 (this LED will flash during programming)
+    - Connect this resistor to the LED's anode (long leg)
+    - Conne the LED's short leg to ground plane
+  - Connect 220Ω resistor to pin 8 (this LED will flash if an error occurs)
+    - Connect this resistor to the LED's anode (long leg)
+    - Conne the LED's short leg to ground plane
+  - Connect 220Ω resistor to pin 9 (this LED will flash to indicate a heartbeat)
+    - Connect this resistor to the LED's anode (long leg)
+    - Conne the LED's short leg to ground plane
+  
+  Full instructions available at [https://www.arduino.cc/en/Tutorial/ArduinoISP](https://www.arduino.cc/en/Tutorial/ArduinoISP)
+</details>
+ 
+#### ICSP Wiring
+Second, wire the Uno to an Arduino Micro using the ICSP connector. Most pins map 1:1 between boards, so once you orient the ICSP header connect pin 1 to pin 1, etc. Two pins require special treatment.
+ 1. The reset pin needs to be connected to pin 10 of the Uno to avoid a reset loop while programming.
+ 1. The power pin can be disconnedted if the Micro is connected to a Switch. If this is left connected, nothing bad happens, but the USB-C connector will need to be unplugged and reconnected each time a new program is flashed to the Micro.
+ 
+![icsp_pinout](https://user-images.githubusercontent.com/8355718/79698237-7de48b80-823c-11ea-9c2d-949cc400f97b.png)
+
+Make the following connections:
+ - Programmer ICSP MISO -> Target ICSP MISO
+ - Programmer ICSP SCK -> Target ICSP SCK
+ - Programmer D10 -> Target ICSP RESET (special case 1)
+ - Programmer ICSP GND -> Target ICSP GND
+ - Programmer ICSP MOSI -> Target ICSP MOSI
+ - Programmer ICSP 5V -> Target ICSP 5V (special case 2)
+
+<details>
+  <summary>Uno full pinout</summary>
+  <img height=500px src="https://user-images.githubusercontent.com/8355718/79698968-2e548e80-8241-11ea-930e-0c57a3cede80.jpg">
+</details>
+
+<details>
+  <summary>Micro full pinout</summary>
+  <img height=500px src="https://user-images.githubusercontent.com/8355718/79698970-314f7f00-8241-11ea-8120-758758949b9d.jpg">
+</details>
+
+> Remember to disconnect ICSP power when connected to a switch or it will stop recognizing the Micro each time a new program is flashed.
+
 #### Flash bootloader
-This prepares the bootloader in the Arduino Micro to receive programs through the ICSP connector.
+This prepares the bootloader in the Arduino Micro to receive programs through the ICSP connector. At this point the following connections should be made:
+```
+PC/Mac <-(USB)- Arduino Uno <-(ICSP)-> Arduino Micro
+```
  1. While leaving the Uno connected, select Micro as the target board (Tools -> Board -> "Aruino Micro")
  1. Use the same port that was used previously
  1. Select the Aduino as ISP programmer (Tools -> Programmer -> "Arduino as ISP").
@@ -140,6 +170,15 @@ Flash the blink program to the board (enable verbose output for uploads to see t
  1. Open the blink example sketch (File -> Examples -> 01. Basics -> Blink). Other scripts can be closed.
  1. Using the same configuration (Tools -> Board -> "Arudino Micro", same port)
  1. Upload the sketch to the micro (Sketch -> Upload Using Programmer)
+
+#### Flash the joystick via ICSP
+If the blink program loaded correctly, connect the Nintendo Switch to the Arduino Micro and disconnect 5v from ICSP:
+```
+PC/Mac <-(USB)- Arduino Uno <-(ICSP)-> Arduino Micro -(USB-C)-> Nintendo Switch
+```
+ 1. From a terminal install prerequisites: `brew tap osx-cross/avr` and `brew install avr-gcc`
+ 1. Compiles `make`
+ 1. Write Joystick.hex to the Micro `./flash_isp.sh`
 
 ## Thanks
 
