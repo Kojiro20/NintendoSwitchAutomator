@@ -114,7 +114,7 @@ typedef struct {
 // Setup all necessary hardware, including USB initialization.
 void SetupHardware(void);
 // Process and deliver data from IN and OUT endpoints.
-void HID_Task();
+void HID_Task(void);
 // USB device event handlers.
 void EVENT_USB_Device_Connect(void);
 void EVENT_USB_Device_Disconnect(void);

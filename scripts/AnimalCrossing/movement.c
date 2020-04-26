@@ -64,9 +64,6 @@ struct Node* MoveDistInDir(int dist, int offset, Buttons_t direction) {
 
     switch (direction)
     {
-        case UP:
-            head->child = FaceUp();
-            break;
         case DOWN:
             head->child = FaceDown();
             break;
@@ -76,6 +73,8 @@ struct Node* MoveDistInDir(int dist, int offset, Buttons_t direction) {
         case RIGHT:
             head->child = FaceRight();
             break;
+        default: // UP
+            head->child = FaceUp();
     }
 
     int gridSpaceDelay = dist * 13 + offset;
