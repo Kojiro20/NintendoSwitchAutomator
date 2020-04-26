@@ -22,7 +22,7 @@ struct Node* getTool(Tools_t tool) {
     return head;
 }
 
-struct Node* StowToolReset() {
+struct Node* StowToolReset(void) {
     if (stowTool == NULL) {
         stowTool = initializeNode(NOTHING, 0);
         struct Node* curr = stowTool;
@@ -39,7 +39,7 @@ struct Node* StowToolReset() {
     return stowTool;
 }
 
-struct Node* GetNet() {
+struct Node* GetNet(void) {
     if (getNet == NULL) {
         getNet = getTool(NET);
     }
@@ -47,7 +47,7 @@ struct Node* GetNet() {
     return getNet;
 }
 
-struct Node* GetShovel() {
+struct Node* GetShovel(void) {
     if (getShovel == NULL) {
         getShovel = getTool(SHOVEL);
     }
@@ -55,7 +55,7 @@ struct Node* GetShovel() {
     return getShovel;
 }
 
-struct Node* GetAxe() {
+struct Node* GetAxe(void) {
     if (getAxe == NULL) {
         getAxe = getTool(AXE);
     }
@@ -63,7 +63,7 @@ struct Node* GetAxe() {
     return getAxe;
 }
 
-struct Node* GetStoneAxe() {
+struct Node* GetStoneAxe(void) {
     if (getStoneAxe == NULL) {
         getStoneAxe = getTool(STONE_AXE);
     }
@@ -71,7 +71,7 @@ struct Node* GetStoneAxe() {
     return getStoneAxe;
 }
 
-struct Node* GetSlingShot() {
+struct Node* GetSlingShot(void) {
     if (getSlingshot == NULL) {
         getSlingshot = getTool(SLINGSHOT);
     }

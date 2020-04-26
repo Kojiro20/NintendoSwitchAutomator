@@ -4,7 +4,7 @@
 static struct Node* buyBulk = NULL;
 static struct Node* selectBulk = NULL;
 
-struct Node* BuyBulk() {
+struct Node* BuyBulk(void) {
     if (buyBulk == NULL) {
         buyBulk = initializeNode(NOTHING, 0);
         struct Node* curr = buyBulk;
@@ -34,7 +34,7 @@ struct Node* BuyBulk() {
     return buyBulk;
 }
 
-struct Node* SelectBulk() {
+struct Node* SelectBulk(void) {
     if (selectBulk == NULL) {
         selectBulk = initializeNode(NOTHING, 0);
         struct Node* curr = selectBulk;

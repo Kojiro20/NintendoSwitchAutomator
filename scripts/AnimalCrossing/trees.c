@@ -124,7 +124,7 @@ struct Node* HarvestFruitGrid(int rows, int cols) {
     return head;
 }
 
-struct Node* ShakeTreeAndCollect() {
+struct Node* ShakeTreeAndCollect(void) {
     struct Node* head = initializeNode(NOTHING, 0);
     struct Node* curr = head;
 
@@ -183,7 +183,7 @@ struct Node* ShakeTreeAndCollect() {
  *   |   |Y    |
  *   |          
  */
-struct Node* ShakeTreeAndSellBranches() {
+struct Node* ShakeTreeAndSellBranches(void) {
     struct Node* head = initializeNode(NOTHING, 0);
     struct Node* curr = head;
 

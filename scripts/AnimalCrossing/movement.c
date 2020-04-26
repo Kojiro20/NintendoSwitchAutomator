@@ -23,7 +23,7 @@ struct Node* faceDir(Buttons_t direction) {
     return head;
 }
 
-struct Node* FaceUp() {
+struct Node* FaceUp(void) {
     if (faceUp == NULL) {
         faceUp = faceDir(UP);
     }
@@ -31,7 +31,7 @@ struct Node* FaceUp() {
     return faceUp;
 }
 
-struct Node* FaceDown() {
+struct Node* FaceDown(void) {
     if (faceDown == NULL) {
         faceDown = faceDir(DOWN);
     }
@@ -39,7 +39,7 @@ struct Node* FaceDown() {
     return faceDown;
 }
 
-struct Node* FaceLeft() {
+struct Node* FaceLeft(void) {
     if (faceLeft == NULL) {
         faceLeft = faceDir(LEFT);
     }
@@ -47,7 +47,7 @@ struct Node* FaceLeft() {
     return faceLeft;
 }
 
-struct Node* FaceRight() {
+struct Node* FaceRight(void) {
     if (faceRight == NULL) {
         faceRight = faceDir(RIGHT);
     }
@@ -83,7 +83,7 @@ struct Node* MoveDistInDir(int dist, int offset, Buttons_t direction) {
     return head;
 }
 
-struct Node* RunInCircle() {
+struct Node* RunInCircle(void) {
     if (runInCircle == NULL) {
         runInCircle = initializeNode(NOTHING, 0);
         struct Node* curr = runInCircle;
