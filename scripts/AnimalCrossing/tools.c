@@ -11,7 +11,7 @@ static struct Node* getStoneAxe = NULL;
 static struct Node* getSlingshot = NULL;
 
 struct Node* getTool(Tools_t tool) {
-    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* head = initializeNode(NOTHING, 0, 0);
     struct Node* curr = head;
 
     // TODO: need to find the smallest delay times where this is reliable
@@ -24,13 +24,12 @@ struct Node* getTool(Tools_t tool) {
 
 struct Node* StowToolReset(void) {
     if (stowTool == NULL) {
-        stowTool = initializeNode(NOTHING, 0);
+        stowTool = initializeNode(NOTHING, 0, 0);
         struct Node* curr = stowTool;
 
         // cancel dialogs
-        for (int i = 0; i < 3; i++) {
-            curr = appendAction(curr, B, 5, 10);
-        }
+        curr = appendAction(curr, B, 5, 10);
+        repeatAction(curr, 3);
 
         // stow
         curr = appendAction(curr, PAD_DOWN, 5, 15);

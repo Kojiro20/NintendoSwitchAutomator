@@ -31,13 +31,13 @@ void InitializeGameScripts(void) {
     // Two button presses: shake a tree 30x and collect everything that falls
     scripts[2]->child = ShakeTreeAndCollect();
 
-    // // Three button presses: buy the last purchased item in bulk from nooks crany
-    scripts[3]->child = BuyBulk();
+    // Three button presses: select all inventory
+    scripts[3]->child = SelectBulk();
     stop(scripts[3]);
 
-    // Four button presses: select all inventory
-    scripts[4]->child = SelectBulk();
-    stop(scripts[4]);
+    // // Four button presses: buy the last purchased item in bulk from nooks crany
+    // scripts[4]->child = BuyBulk();
+    // stop(scripts[4]);
 
     // Five button presses: collect everything on the ground in a 10x10 starting bottom right
     // scripts[5] = TBD

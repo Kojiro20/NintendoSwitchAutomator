@@ -14,7 +14,7 @@ static int movementDist = 13;
 
 struct Node* HarvestFromTree(void) {
     if (harvestFromTree == NULL) {
-        harvestFromTree = initializeNode(NOTHING, 0);
+        harvestFromTree = initializeNode(NOTHING, 0, 0);
         struct Node* curr = harvestFromTree;
 
         // put tool away
@@ -30,7 +30,7 @@ struct Node* HarvestFromTree(void) {
 
 struct Node* CollectAroundTree(void) {
     if (collectAroundTree == NULL) {
-        collectAroundTree = initializeNode(NOTHING, 0);
+        collectAroundTree = initializeNode(NOTHING, 0, 0);
         struct Node* curr = collectAroundTree;
 
         // pick up anything
@@ -67,7 +67,7 @@ struct Node* CollectAroundTree(void) {
 
 struct Node* GoToTreeAbove(void) {
     if (goToTreeAbove == NULL) {
-        goToTreeAbove = initializeNode(NOTHING, 0);
+        goToTreeAbove = initializeNode(NOTHING, 0, 0);
         struct Node* curr = goToTreeAbove;
 
         // go to tree above
@@ -88,7 +88,7 @@ struct Node* GoToTreeAbove(void) {
  * Eventually TODO: add a repeat field to nodes and update the runner.
  */
 struct Node* HarvestFruitGrid(int rows, int cols) {
-    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* head = initializeNode(NOTHING, 0, 0);
     struct Node* curr = head;
     
     // put tool away
@@ -98,9 +98,9 @@ struct Node* HarvestFruitGrid(int rows, int cols) {
         for (int j = 0; j < cols; j++) {
             // collect from a tree immediately in front of character
             curr->child = HarvestFromTree();
-            curr = noOp(curr, 0);
+            curr = appendAction(curr, NOTHING, 0, 0);
             curr->child = CollectAroundTree();
-            curr = noOp(curr, 0);
+            curr = appendAction(curr, NOTHING, 0, 0);
 
             // go left and then repeat
             if ((j+1) < cols) {
@@ -113,30 +113,30 @@ struct Node* HarvestFruitGrid(int rows, int cols) {
         curr = appendAction(curr, RIGHT, (cols-1) * 24, cols * 24);
 
         if ((i+1) < rows) {
-            curr = noOp(curr, 0);
+            curr = appendAction(curr, NOTHING, 0, 0);
             curr->child = GoToTreeAbove();
         }
 
-        curr = noOp(curr, 5);
-        curr = noOp(curr, 5);
+        curr = appendAction(curr, NOTHING, 5, 0);
+        curr = appendAction(curr, NOTHING, 5, 0);
     }
 
     return head;
 }
 
 struct Node* ShakeTreeAndCollect(void) {
-    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* head = initializeNode(NOTHING, 0, 0);
     struct Node* curr = head;
-
+    
     // shake tree
-    for (int i = 0; i < 30; i++) {
-        curr = appendAction(curr, A, 5, 29);
-    }
+    curr = appendAction(curr, A, 5, 29);
+    repeatAction(curr, 30);
+    curr = appendAction(curr, NOTHING, 0, 0);
 
     // pick up branches
     int collectTime = 15;
     curr->child = MoveDistInDir(2, -5, DOWN);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = FaceLeft();
     curr = appendAction(curr, Y, 5, collectTime);
     curr->child = MoveDistInDir(1, 0, LEFT);
@@ -163,9 +163,9 @@ struct Node* ShakeTreeAndCollect(void) {
     curr = appendAction(curr, Y, 5, collectTime);
 
     curr->child = MoveDistInDir(1, -3, RIGHT);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(1, 3, UP);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = FaceLeft();
 
     return head;
@@ -184,32 +184,32 @@ struct Node* ShakeTreeAndCollect(void) {
  *   |          
  */
 struct Node* ShakeTreeAndSellBranches(void) {
-    struct Node* head = initializeNode(NOTHING, 0);
+    struct Node* head = initializeNode(NOTHING, 0, 0);
     struct Node* curr = head;
 
     // go to tree
     curr->child = MoveDistInDir(1, 0, DOWN);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(2, 0, LEFT);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(4, 4, UP);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(1, 0, LEFT);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
 
     curr->child = ShakeTreeAndCollect();
 
     // go back to drop box
     curr->child = MoveDistInDir(1, 0, DOWN);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(1, 0, RIGHT);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(3, 5, DOWN);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(2, -3, RIGHT);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = MoveDistInDir(1, 10, UP);
-    curr = noOp(curr, 0);
+    curr = appendAction(curr, NOTHING, 0, 0);
 
     // sell items
     curr = appendAction(curr, A, 5, 50); // dailog - yes I want to use the box
