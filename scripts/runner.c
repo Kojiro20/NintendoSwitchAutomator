@@ -10,6 +10,9 @@ static struct Node* curr = NULL;
 static struct Node* scripts[SCRIPT_COUNT];
 static struct Node* stack[STACK_DEPTH];
 static int stackIndex = 0;
+static long state = 0l;
+Command delay = { NOTHING, 0 };
+char shouldDelay = 0;
 
 /*
  * This is called once by joystick as the program initializes
@@ -19,23 +22,22 @@ void InitializeGameScripts(void) {
 
     // Initialize starting nodes
     for (int i = 0; i < SCRIPT_COUNT; i++) {
-        scripts[i] = initializeNode(NOTHING, 0);
+         scripts[i] = initializeNode(NOTHING, 1, 1);
     }
 
-    // Initial entry does nothing and is used as a reset when scripts are off
-    appendAction(scripts[0], NOTHING, 5, 25);
-
     // One button press: button mash `A`
-    appendAction(scripts[1], NOTHING, 5, 25);
+    appendAction(scripts[1], A, 5, 25);
 
     // Two button presses: shake a tree 30x and collect everything that falls
     scripts[2]->child = ShakeTreeAndCollect();
 
-    // Three button presses: buy the last purchased item in bulk from nooks crany
+    // // Three button presses: buy the last purchased item in bulk from nooks crany
     scripts[3]->child = BuyBulk();
+    stop(scripts[3]);
 
     // Four button presses: select all inventory
     scripts[4]->child = SelectBulk();
+    stop(scripts[4]);
 
     // Five button presses: collect everything on the ground in a 10x10 starting bottom right
     // scripts[5] = TBD
@@ -46,12 +48,43 @@ void InitializeGameScripts(void) {
  */
 void SelectScript(int scriptNum) {
     if (scriptNum >= SCRIPT_COUNT) {
-        scriptNum == 0;
+        scriptNum = 0;
     }
 
     head = scripts[scriptNum];
     curr = NULL;
     stackIndex = 0;
+    state = 0l;
+}
+
+/*
+ * Maintains repeat state and determines if the current node should be repeated
+ */
+struct Node* getNextWithRepeat(struct Node* node) {
+    if (node->repeat == NULL) {
+        return node->next;
+    }
+
+    // if the node's state is greater than current state, a reset must have occured
+    if (node->repeat->repeatState > state) {
+        node->repeat->repeatCount = 0;
+    }
+
+    // assign state and increment number of iterations
+    node->repeat->repeatState = state;
+    node->repeat->repeatCount++;
+
+    // if the node's repeat count state is greater than the target, reset
+    if (node->repeat->repeatCount > node->repeat->repeatTarget) {
+        node->repeat->repeatCount = 1;
+    }
+
+    // check if it has been sufficiently repeated
+    if (node->repeat->repeatCount == node->repeat->repeatTarget) {
+        return node->next;
+    } else {
+        return node;
+    }
 }
 
 /*
@@ -60,19 +93,31 @@ void SelectScript(int scriptNum) {
  * the current node - all children, then the next node.
  */
 Command GetNextCommand(void) {
+    state++;
+    
+    // cycle between returning a no-op and fetching something from the list
+    if (shouldDelay) {
+        shouldDelay = 0;
+        return delay;
+    }
 
     // scan for the next non-empty next pointer on the stack
     while (curr == NULL) {
         if (stackIndex == 0) {
             curr = head; // reset if we reached the end, this could also stop
+            state = 0;
         } else {
             stackIndex--;
-            curr = stack[stackIndex]->next;
+            curr = getNextWithRepeat(stack[stackIndex]);
         }
     }
 
     // execute the current node's command
     Command res = curr->command;
+
+    // update the next delay cycle
+    delay.duration = curr->waitTime;
+    shouldDelay = 1;
 
     // if a child branch exists, follow it and add this node to the stack
     if (curr->child != NULL) {
@@ -80,8 +125,9 @@ Command GetNextCommand(void) {
         stackIndex++;
         curr = curr->child;
     } else {
-        curr = curr->next;
+        curr = getNextWithRepeat(curr);
     }
 
+    state++;
     return res;
 }

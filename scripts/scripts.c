@@ -1,19 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "scripts.h"
-#include "AnimalCrossing/movement.h"
-#include "AnimalCrossing/tools.h"
-#include "AnimalCrossing/trees.h"
-#include "AnimalCrossing/shop.h"
 
 /*
  * Helper to initialize new nodes
  */
-struct Node* initializeNode(Buttons_t button, uint16_t duration) {
+struct Node* initializeNode(Buttons_t button, uint16_t duration, uint16_t waitTime) {
     struct Node* node = (struct Node*)malloc(sizeof(struct Node));
     node->command = (Command) { (Buttons_t) button, duration };
+    node->repeat = NULL;
     node->next = NULL;
     node->child = NULL;
+    node->waitTime = waitTime;
     return node;
 }
 
@@ -21,27 +19,33 @@ struct Node* initializeNode(Buttons_t button, uint16_t duration) {
  * Helper to append a new action
  */
 struct Node* appendAction(struct Node* curr, Buttons_t button, uint16_t duration, uint16_t waitTime) {
-    struct Node* next = initializeNode(button, duration);
-    curr->next = next;
-
-    // follow each action with a no-op to reset joystick and buttons
-    return noOp(next, waitTime);
+    struct Node* node = initializeNode(button, duration, waitTime);
+    curr->next = node;
+    return node;
 }
 
 /*
- * Add a noOp cycle to the end
+ * Helper to repeat a node
+ */
+void repeatAction(struct Node* curr, int repeats) {
+    if (repeats > 0) {
+        struct RepeatingNode* repeat = (struct RepeatingNode*)malloc(sizeof(struct RepeatingNode));
+        repeat->repeatCount = 0;
+        repeat->repeatTarget = repeats;
+        repeat->repeatState = 0l;
+        curr->repeat = repeat;
+    }
+}
+
+/*
+ * Add a noOp cycle to the end to stop a script that should not repeat
  */
 void stop(struct Node* curr) {
-    curr = noOp(curr, 50);
-    curr->next = curr;
-}
+    struct Node* end = initializeNode(NOTHING, 50, 50);
+    
+    // create a cycle
+    end->next = end;
 
-/*
- * Helper for adding a new no-op node (in case a new child branch is needed)
- */
-struct Node* noOp(struct Node* curr, uint16_t waitTime) {
-    struct Node* delay = initializeNode(NOTHING, waitTime);
-    curr->next = delay;
-    return delay;
+    // assign it to the curr node's next pointer
+    curr->next = end;
 }
-
