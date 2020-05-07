@@ -3,5 +3,6 @@
 
 struct Node* BuyBulk(void);
 struct Node* SelectBulk(void);
+struct Node* DropBulk(void);
 
 #endif

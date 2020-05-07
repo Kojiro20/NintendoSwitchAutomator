@@ -362,6 +362,26 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
                     ReportData->HAT = HAT_BOTTOM;
                     break;
 
+                case DRAG_LEFT:
+                    ReportData->Button |= SWITCH_A;
+                    ReportData->LX = STICK_MIN;
+                    break;
+
+                case DRAG_RIGHT:
+                    ReportData->Button |= SWITCH_A;
+                    ReportData->LX = STICK_MAX;
+                    break;
+
+                case DRAG_UP:
+                    ReportData->Button |= SWITCH_A;
+                    ReportData->LY = STICK_MIN;
+                    break;
+
+                case DRAG_DOWN:
+                    ReportData->Button |= SWITCH_A;
+                    ReportData->LY = STICK_MAX;
+                    break;
+
                 default:
                     ReportData->LX = STICK_CENTER;
                     ReportData->LY = STICK_CENTER;

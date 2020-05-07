@@ -33,6 +33,10 @@ typedef enum {
     PAD_UP,
     PAD_RIGHT,
     PAD_DOWN,
+    DRAG_LEFT,
+    DRAG_RIGHT,
+    DRAG_UP,
+    DRAG_DOWN
 } Buttons_t;
 
 typedef struct {
