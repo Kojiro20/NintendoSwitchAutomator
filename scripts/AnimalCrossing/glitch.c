@@ -72,8 +72,8 @@ struct Node* SelectTvsFromHomeInventory(void) {
         rowSelector->child = initializeNode(NOTHING, 0, 0);
         struct Node* c = rowSelector->child;
         c = appendAction(c, A, 5, 10); // move to pockets?
-        c = appendAction(c, A, 5, 5); // yes
-        c = appendAction(c, RIGHT, 5, 5); // next
+        c = appendAction(c, A, 5, 7); // yes
+        c = appendAction(c, RIGHT, 5, 7); // next
 
         // create a move-down node that repeates 5 times
         struct Node* moveDown = initializeNode(DOWN, 5, 5);
@@ -99,7 +99,7 @@ struct Node* SelectTvsFromHomeInventory(void) {
 
         // go to top of misc inventory
         curr = appendAction(curr, PAD_UP, 5, 5);
-        repeatAction(curr, 6);
+        repeatAction(curr, 12);
 
         // select 40 items
         curr = appendAction(curr, DOWN, 5, 10);
@@ -184,16 +184,34 @@ struct Node* SellInventory(void) {
     return sellInventory;
 }
 
-struct Node* CloneItem(void)
-{
+struct Node* CloneItem(void) {
+    /*
+     * Pre-requisites:
+     *   - room setup
+     *   - enter decoration mode
+     * 
+     *  The room should be right, off the entry way
+     *      .   .   .   .
+     *     ┌------------┐
+     *    .│            │
+     *     │            │
+     *     │            │
+     *     │    ╔══╗    │
+     *    .│    ║  ║    │
+     *     │    ║  ║ <- 4x4 table
+     *     ┘    ╚══╝    │
+     *    <- entry      │
+     *    .           ╔╗│
+     *     ┐          ║║ <- TV
+     *     │          ║║│
+     *     │          ╚╝│
+     *     └------------┘
+     */
+
     if (cloneItem == NULL)
     {
         cloneItem = initializeNode(NOTHING, 0, 0);
         struct Node *curr = cloneItem;
-
-        // go into decoration mode
-        curr = appendAction(curr, PAD_DOWN, 5, 40);
-        repeatAction(curr, 3);
 
         // move cursor to the bottom right
         curr = appendAction(curr, RIGHT, 40, 0);
@@ -253,10 +271,18 @@ struct Node* Clone40ItemsThenSell(void) {
         curr = appendAction(curr, B, 5, 20);
         repeatAction(curr, 3);
 
+        // go into decoration mode
+        curr = appendAction(curr, PAD_DOWN, 5, 40);
+        repeatAction(curr, 3);
+
         // make 40 tvs
         curr = appendAction(curr, NOTHING, 0, 0);
         curr->child = CloneItem();
         repeatAction(curr, 20);
+
+        // exit decoration mode
+        curr = appendAction(curr, B, 5, 10);
+        repeatAction(curr, 3);
 
         // leave room
         curr = appendAction(curr, NOTHING, 1, 0);

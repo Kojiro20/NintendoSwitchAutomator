@@ -30,21 +30,11 @@ void InitializeGameScripts(void) {
 
     // Two button presses: infinite bells
     scripts[2]->child = Clone40ItemsThenSell();
-    stop(scripts[2]);
 
-    // scripts[3]->child = SellInventoryToDropBox();
-    // stop(scripts[3]);
+    scripts[3]->child = CloneItem();
 
-    // // Three button presses: glitch to clone 2x1 items
-    // scripts[3]->child = CloneItem();
-    // // stop(scripts[3]);
-
-    // // Four button presses: buy the last purchased item in bulk from nooks crany
-    // scripts[4]->child = BuyBulk();
-    // stop(scripts[4]);
-
-    // Five button presses: collect everything on the ground in a 10x10 starting bottom right
-    // scripts[5] = TBD
+    scripts[4]->child = SellInventoryToDropBox();
+    stop(scripts[4]);
 }
 
 /*
