@@ -29,11 +29,15 @@ void InitializeGameScripts(void) {
     appendAction(scripts[1], A, 5, 25);
 
     // Two button presses: shake a tree 30x and collect everything that falls
-    scripts[2]->child = ShakeTreeAndCollect();
+    scripts[2]->child = SellInventory20x();
+    stop(scripts[2]);
 
-    // Three button presses: glitch to clone 2x1 items
-    scripts[3]->child = CloneItem();
+    // scripts[3]->child = SellInventoryToDropBox();
     // stop(scripts[3]);
+
+    // // Three button presses: glitch to clone 2x1 items
+    // scripts[3]->child = CloneItem();
+    // // stop(scripts[3]);
 
     // // Four button presses: buy the last purchased item in bulk from nooks crany
     // scripts[4]->child = BuyBulk();
