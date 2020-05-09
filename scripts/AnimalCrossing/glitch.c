@@ -7,50 +7,60 @@
 static struct Node* cloneItem = NULL;
 static struct Node* sellInventory = NULL;
 static struct Node* sellInventory20x = NULL;
-static struct Node* leaveRoomAndSellInventory = NULL;
 static struct Node* sellInventoryToDropBox = NULL;
 static struct Node* selectTvsFromHomeInventory = NULL;
 static struct Node* goFromHomeToNookMart = NULL;
 static struct Node* goFromNookMartToHome = NULL;
+static struct Node* clone40ItemsThenSell = NULL;
 
-struct Node* LeaveRoomAndSellInventory(void) {
-    if (leaveRoomAndSellInventory == NULL)
+struct Node* GoFromHomeToNookMart(void) {
+    if (goFromHomeToNookMart == NULL)
     {
-        leaveRoomAndSellInventory = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = leaveRoomAndSellInventory;
+        goFromHomeToNookMart = initializeNode(NOTHING, 0, 0);
+        struct Node *curr = goFromHomeToNookMart;
 
-        // close decoration mode
-        curr = appendAction(curr, B, 5, 20);
-        repeatAction(curr, 3);
-
-        // leave room
-        curr = appendAction(curr, NOTHING, 1, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 3 * 15, 300);
-
-        // leave house
-        curr = appendAction(curr, LEFT, 3 * 16, 0);
-        curr = appendAction(curr, DOWN, 4 * 15, 300);
-
-        // go to rat house
-        curr->child = GoFromHomeToNookMart();
-
-        // sale box
-        curr = appendAction(curr, A, 5, 20);
-        curr = appendAction(curr, B, 5, 20);
-        repeatAction(curr, 10); // get out of the dialog
-
-        // go home
-        curr = appendAction(curr, NOTHING, 0, 0);
-        curr->child = GoFromNookMartToHome();
-        curr = appendAction(curr, A, 5, 300);
-
-        // go back to room
+        curr->child = FaceDown();
+        curr = appendAction(curr, DOWN, 7 * 15, 0);
+        curr->child = FaceRight();
+        curr = appendAction(curr, RIGHT, 2 * 15, 0);
+        curr->child = FaceDown();
+        curr = appendAction(curr, DOWN, 6 * 15, 0);
+        curr->child = FaceRight();
+        curr = appendAction(curr, RIGHT, 12 * 15, 0);
+        curr->child = FaceDown();
+        curr = appendAction(curr, DOWN, 3 * 15, 0);
+        curr->child = FaceRight();
+        curr = appendAction(curr, RIGHT, 2 * 15, 0);
+        curr->child = FaceUp();
         curr = appendAction(curr, UP, 2 * 15, 0);
-        curr = appendAction(curr, RIGHT, 5 * 16, 300);
     }
 
-    return leaveRoomAndSellInventory;
+    return goFromHomeToNookMart;
+}
+
+struct Node* GoFromNookMartToHome(void) {
+    if (goFromNookMartToHome == NULL)
+    {
+        goFromNookMartToHome = initializeNode(NOTHING, 0, 0);
+        struct Node *curr = goFromNookMartToHome;
+
+        curr->child = FaceDown();
+        curr = appendAction(curr, DOWN, 2 * 15, 0);
+        curr->child = FaceLeft();
+        curr = appendAction(curr, LEFT, 2 * 15, 0);
+        curr->child = FaceUp();
+        curr = appendAction(curr, UP, 3 * 15, 0);
+        curr->child = FaceLeft();
+        curr = appendAction(curr, LEFT, 12 * 15, 0);
+        curr->child = FaceUp();
+        curr = appendAction(curr, UP, 6 * 15, 0);
+        curr->child = FaceLeft();
+        curr = appendAction(curr, LEFT, 2 * 15, 0);
+        curr->child = FaceUp();
+        curr = appendAction(curr, UP, 7 * 15, 0);
+    }
+
+    return goFromNookMartToHome;
 }
 
 struct Node* SelectTvsFromHomeInventory(void) {
@@ -158,7 +168,7 @@ struct Node* SellInventory(void) {
         // leave house
         curr = appendAction(curr, DOWN, 4 * 15, 300);
 
-        // go to rat house
+        // go to nook's cranny
         curr->child = GoFromHomeToNookMart();
 
         // sale box
@@ -174,69 +184,6 @@ struct Node* SellInventory(void) {
     return sellInventory;
 }
 
-struct Node* SellInventory20x(void) {
-    if (sellInventory20x == NULL)
-    {
-        sellInventory20x = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = sellInventory20x;
-
-        curr->child = SellInventory();
-        repeatAction(curr, 20);
-    }
-
-    return sellInventory20x;
-}
-
-struct Node* GoFromHomeToNookMart(void) {
-    if (goFromHomeToNookMart == NULL)
-    {
-        goFromHomeToNookMart = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = goFromHomeToNookMart;
-
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 7 * 15, 0);
-        curr->child = FaceRight();
-        curr = appendAction(curr, RIGHT, 2 * 15, 0);
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 6 * 15, 0);
-        curr->child = FaceRight();
-        curr = appendAction(curr, RIGHT, 12 * 15, 0);
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 3 * 15, 0);
-        curr->child = FaceRight();
-        curr = appendAction(curr, RIGHT, 2 * 15, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 2 * 15, 0);
-    }
-
-    return goFromHomeToNookMart;
-}
-
-struct Node* GoFromNookMartToHome(void) {
-    if (goFromNookMartToHome == NULL)
-    {
-        goFromNookMartToHome = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = goFromNookMartToHome;
-
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 2 * 15, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 2 * 15, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 3 * 15, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 12 * 15, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 6 * 15, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 2 * 15, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 7 * 15, 0);
-    }
-
-    return goFromNookMartToHome;
-}
-
 struct Node* CloneItem(void)
 {
     if (cloneItem == NULL)
@@ -245,8 +192,8 @@ struct Node* CloneItem(void)
         struct Node *curr = cloneItem;
 
         // go into decoration mode
-        curr = appendAction(curr, NOTHING, 5, 30);
-        curr = appendAction(curr, PAD_DOWN, 5, 80);
+        curr = appendAction(curr, PAD_DOWN, 5, 40);
+        repeatAction(curr, 3);
 
         // move cursor to the bottom right
         curr = appendAction(curr, RIGHT, 40, 0);
@@ -294,4 +241,54 @@ struct Node* CloneItem(void)
     }
 
     return cloneItem;
+}
+
+struct Node* Clone40ItemsThenSell(void) {
+    if (clone40ItemsThenSell == NULL)
+    {
+        clone40ItemsThenSell = initializeNode(NOTHING, 0, 0);
+        struct Node* curr = clone40ItemsThenSell;
+
+        // close things
+        curr = appendAction(curr, B, 5, 20);
+        repeatAction(curr, 3);
+
+        // make 40 tvs
+        curr = appendAction(curr, NOTHING, 0, 0);
+        curr->child = CloneItem();
+        repeatAction(curr, 20);
+
+        // leave room
+        curr = appendAction(curr, NOTHING, 1, 0);
+        curr->child = FaceLeft();
+        curr = appendAction(curr, LEFT, 3 * 15, 300);
+
+        // stand in middle of room
+        curr = appendAction(curr, LEFT, 3 * 16, 0);
+
+        // grab 40 tvs from inventory
+        curr = appendAction(curr, NOTHING, 1, 0);
+        curr->child = SelectTvsFromHomeInventory();
+
+        // leave house
+        curr = appendAction(curr, DOWN, 6 * 15, 300);
+
+        // go to nook's cranny
+        curr->child = GoFromHomeToNookMart();
+
+        // sale box
+        curr = appendAction(curr, NOTHING, 5, 0);
+        curr->child = SellInventoryToDropBox();
+        
+        // go home
+        curr = appendAction(curr, NOTHING, 0, 0);
+        curr->child = GoFromNookMartToHome();
+        curr = appendAction(curr, A, 5, 400);
+
+        // go back to room
+        curr = appendAction(curr, UP, 2 * 15, 0);
+        curr = appendAction(curr, RIGHT, 5 * 16, 300);
+    }
+
+    return clone40ItemsThenSell;
 }

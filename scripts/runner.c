@@ -28,8 +28,8 @@ void InitializeGameScripts(void) {
     // One button press: button mash `A`
     appendAction(scripts[1], A, 5, 25);
 
-    // Two button presses: shake a tree 30x and collect everything that falls
-    scripts[2]->child = SellInventory20x();
+    // Two button presses: infinite bells
+    scripts[2]->child = Clone40ItemsThenSell();
     stop(scripts[2]);
 
     // scripts[3]->child = SellInventoryToDropBox();
