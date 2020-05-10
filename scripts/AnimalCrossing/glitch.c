@@ -28,7 +28,7 @@ struct Node* GoFromHomeToNookMart(void) {
         curr->child = FaceRight();
         curr = appendAction(curr, RIGHT, 12 * 15, 0);
         curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 3 * 15, 0);
+        curr = appendAction(curr, DOWN, 6 + 2 * 15, 0);
         curr->child = FaceRight();
         curr = appendAction(curr, RIGHT, 2 * 15, 0);
         curr->child = FaceUp();
@@ -49,15 +49,15 @@ struct Node* GoFromNookMartToHome(void) {
         curr->child = FaceLeft();
         curr = appendAction(curr, LEFT, 2 * 15, 0);
         curr->child = FaceUp();
-        curr = appendAction(curr, UP, 3 * 15, 0);
+        curr = appendAction(curr, UP, 6 + 2 * 15, 0);
         curr->child = FaceLeft();
         curr = appendAction(curr, LEFT, 12 * 15, 0);
         curr->child = FaceUp();
         curr = appendAction(curr, UP, 6 * 15, 0);
         curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 2 * 15, 0);
+        curr = appendAction(curr, LEFT, 2 * 15 - 4, 0);
         curr->child = FaceUp();
-        curr = appendAction(curr, UP, 7 * 15, 0);
+        curr = appendAction(curr, UP, 7 * 15 + 6, 0);
     }
 
     return goFromNookMartToHome;
@@ -67,24 +67,24 @@ struct Node* SelectTvsFromHomeInventory(void) {
     if (selectTvsFromHomeInventory == NULL)
     {
         // create a row selector node that selects 8 items
-        struct Node* rowSelector = initializeNode(NOTHING, 0, 0);
-        repeatAction(rowSelector, 8);
-        rowSelector->child = initializeNode(NOTHING, 0, 0);
-        struct Node* c = rowSelector->child;
+        struct Node* selectItems = initializeNode(NOTHING, 0, 0);
+        repeatAction(selectItems, 8);
+        selectItems->child = initializeNode(NOTHING, 0, 0);
+        struct Node* c = selectItems->child;
         c = appendAction(c, A, 5, 10); // move to pockets?
         c = appendAction(c, A, 5, 7); // yes
-        c = appendAction(c, RIGHT, 5, 7); // next
+        c = appendAction(c, PAD_RIGHT, 5, 7); // next
 
-        // create a move-down node that repeates 5 times
-        struct Node* moveDown = initializeNode(DOWN, 5, 5);
-        repeatAction(moveDown, 5);
-        moveDown->child = rowSelector;
+        // create a node that moves down and repeats item selection 5 times
+        struct Node* selectRow = initializeNode(PAD_DOWN, 5, 5);
+        repeatAction(selectRow, 5);
+        selectRow->child = selectItems;
 
 
         /*
          * Pre-reqs:
          *  make sure misc inventory slot is selected
-         *  make sure TVs start on the second row of inventory
+         *  make sure TVs start on the fifth row of inventory
          *  start script from immediately inside front door
          *  start with empty inventory
          */
@@ -101,12 +101,17 @@ struct Node* SelectTvsFromHomeInventory(void) {
         curr = appendAction(curr, PAD_UP, 5, 5);
         repeatAction(curr, 12);
 
+        // go down 4 rows, then start
+        curr = appendAction(curr, PAD_DOWN, 5, 5);
+        repeatAction(curr, 3);
+
         // select 40 items
-        curr = appendAction(curr, DOWN, 5, 10);
-        curr->child = moveDown;
+        curr = appendAction(curr, NOTHING, 0, 0);
+        curr->child = selectRow;
 
         // exit selector
         curr = appendAction(curr, B, 5, 25);
+        repeatAction(curr, 3);
     }
 
     return selectTvsFromHomeInventory;
@@ -131,6 +136,12 @@ struct Node* SellInventoryToDropBox(void) {
         struct Node* moveDown = initializeNode(NOTHING, 5, 5);
         repeatAction(moveDown, 4);
         moveDown->child = rowSelector;
+
+        /*
+         * Prerequisites:
+         *  be ready to sell everything in your inventory
+         *  stand in front of the dropbox
+         */
 
         // standing in front to of the dropbox
         curr = appendAction(curr, A, 5, 5);
@@ -179,6 +190,7 @@ struct Node* SellInventory(void) {
         curr = appendAction(curr, NOTHING, 0, 0);
         curr->child = GoFromNookMartToHome();
         curr = appendAction(curr, A, 5, 400);
+        repeatAction(curr, 3);
     }
 
     return sellInventory;

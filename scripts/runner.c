@@ -36,8 +36,11 @@ void InitializeGameScripts(void) {
 
     // scripts[3]->child = CloneItem();
 
-    // scripts[4]->child = SellInventoryToDropBox();
-    // stop(scripts[4]);
+    scripts[4]->child = SelectTvsFromHomeInventory();
+    stop(scripts[4]);
+
+    scripts[5]->child = SellInventoryToDropBox();
+    stop(scripts[5]);
 }
 
 /*
