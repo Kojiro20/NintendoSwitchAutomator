@@ -13,6 +13,13 @@ static struct Node* goFromHomeToNookMart = NULL;
 static struct Node* goFromNookMartToHome = NULL;
 static struct Node* clone40ItemsThenSell = NULL;
 
+/*
+ * Pre-reqs:
+ *  Exit your house, don't move, then start this
+ * 
+ * End state:
+ *  this should end in front of the nook mart drop-box
+ */
 struct Node* GoFromHomeToNookMart(void) {
     if (goFromHomeToNookMart == NULL)
     {
@@ -38,6 +45,13 @@ struct Node* GoFromHomeToNookMart(void) {
     return goFromHomeToNookMart;
 }
 
+/*
+ * Pre-reqs:
+ *  Stand in front of the drop box, start selling, then cancel
+ * 
+ * End state:
+ *  this should end inside your house
+ */
 struct Node* GoFromNookMartToHome(void) {
     if (goFromNookMartToHome == NULL)
     {
@@ -63,7 +77,19 @@ struct Node* GoFromNookMartToHome(void) {
     return goFromNookMartToHome;
 }
 
+/*
+ * Pre-reqs:
+ *  make sure misc inventory slot is selected
+ *  make sure TVs start on the fifth row of inventory (can adjust this by changing - `tvStartRow`)
+ *  start script from immediately inside front door
+ *  start with empty pocket inventory
+ * 
+ * End state:
+ *  The 40 items from row 5 through 10 will be placed in pocket inventory
+ */
 struct Node* SelectTvsFromHomeInventory(void) {
+    int tvStartRow = 5;
+
     if (selectTvsFromHomeInventory == NULL)
     {
         // create a row selector node that selects 8 items
@@ -80,16 +106,6 @@ struct Node* SelectTvsFromHomeInventory(void) {
         repeatAction(selectRow, 5);
         selectRow->child = selectItems;
 
-
-        /*
-         * Pre-reqs:
-         *  make sure misc inventory slot is selected
-         *  make sure TVs start on the fifth row of inventory
-         *  start script from immediately inside front door
-         *  start with empty inventory
-         */
-
-
         selectTvsFromHomeInventory = initializeNode(NOTHING, 10, 0);
         struct Node *curr = selectTvsFromHomeInventory;
 
@@ -103,7 +119,7 @@ struct Node* SelectTvsFromHomeInventory(void) {
 
         // go down 4 rows, then start
         curr = appendAction(curr, PAD_DOWN, 5, 5);
-        repeatAction(curr, 3);
+        repeatAction(curr, tvStartRow - 2); // -2 because starts on row 1, then first instruction goes down 1 more
 
         // select 40 items
         curr = appendAction(curr, NOTHING, 0, 0);
@@ -117,6 +133,14 @@ struct Node* SelectTvsFromHomeInventory(void) {
     return selectTvsFromHomeInventory;
 }
 
+/*
+ * Prerequisites:
+ *  be ready to sell everything in your inventory
+ *  stand in front of the dropbox
+ * 
+ * End state:
+ *  all items in inventory will be sold, cannot be looped
+ */
 struct Node* SellInventoryToDropBox(void) {
     if (sellInventoryToDropBox == NULL)
     {
@@ -136,12 +160,6 @@ struct Node* SellInventoryToDropBox(void) {
         struct Node* moveDown = initializeNode(NOTHING, 5, 5);
         repeatAction(moveDown, 4);
         moveDown->child = rowSelector;
-
-        /*
-         * Prerequisites:
-         *  be ready to sell everything in your inventory
-         *  stand in front of the dropbox
-         */
 
         // standing in front to of the dropbox
         curr = appendAction(curr, A, 5, 5);
@@ -166,60 +184,31 @@ struct Node* SellInventoryToDropBox(void) {
     return sellInventoryToDropBox;
 }
 
-struct Node* SellInventory(void) {
-    if (sellInventory == NULL)
-    {
-        sellInventory = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = sellInventory;
-
-        // grab 40 tvs from inventory
-        curr = appendAction(curr, NOTHING, 1, 0);
-        curr->child = SelectTvsFromHomeInventory();
-
-        // leave house
-        curr = appendAction(curr, DOWN, 4 * 15, 300);
-
-        // go to nook's cranny
-        curr->child = GoFromHomeToNookMart();
-
-        // sale box
-        curr = appendAction(curr, NOTHING, 5, 0);
-        curr->child = SellInventoryToDropBox();
-        
-        // go home
-        curr = appendAction(curr, NOTHING, 0, 0);
-        curr->child = GoFromNookMartToHome();
-        curr = appendAction(curr, A, 5, 400);
-        repeatAction(curr, 3);
-    }
-
-    return sellInventory;
-}
-
+/*
+ * Pre-reqs:
+ *  Enter the room to the right of the entry in your home
+ *  Configure the room with:
+ *      .   .   .   .
+ *     ┌------------┐
+ *    .│            │
+ *     │            │
+ *     │            │
+ *     │    ╔══╗    │
+ *    .│    ║  ║    │
+ *     │    ║  ║ <- 4x4 table
+ *     ┘    ╚══╝    │
+ *    <- entry      │
+ *    .           ╔╗│
+ *     ┐          ║║ <- TV
+ *     │          ║║│
+ *     │          ╚╝│
+ *     └------------┘
+ *
+ * End state:
+ *  This will end in the same place it starts
+ *  it can be looped until home inventory is full
+ */
 struct Node* CloneItem(void) {
-    /*
-     * Pre-requisites:
-     *   - room setup
-     *   - enter decoration mode
-     * 
-     *  The room should be right, off the entry way
-     *      .   .   .   .
-     *     ┌------------┐
-     *    .│            │
-     *     │            │
-     *     │            │
-     *     │    ╔══╗    │
-     *    .│    ║  ║    │
-     *     │    ║  ║ <- 4x4 table
-     *     ┘    ╚══╝    │
-     *    <- entry      │
-     *    .           ╔╗│
-     *     ┐          ║║ <- TV
-     *     │          ║║│
-     *     │          ╚╝│
-     *     └------------┘
-     */
-
     if (cloneItem == NULL)
     {
         cloneItem = initializeNode(NOTHING, 0, 0);
@@ -273,6 +262,16 @@ struct Node* CloneItem(void) {
     return cloneItem;
 }
 
+/*
+ * Prerequisites:
+ *  start in the room to the right of the entry room in your house
+ *  have empty pockets
+ *  have 4 full rows of items before the first TV in your inventory
+ *      40 tvs will be created and everything from rows 5-10 will be sold
+ * 
+ * End state:
+ *  this will end in the same place it starts, it can be looped
+ */
 struct Node* Clone40ItemsThenSell(void) {
     if (clone40ItemsThenSell == NULL)
     {
