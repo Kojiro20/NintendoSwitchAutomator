@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <scripts/scripts.h>
 
+// NOTE: Before starting these scripts, you need to be right in front of dodo.
+// It also must be the first time talking to dodo after entering the airport.
+// (His speech is different when you talk to him the 2nd time)
+
 static struct Node* welcome = NULL;
 struct Node* _Welcome(void) {
     if (welcome == NULL) {
@@ -49,7 +53,7 @@ struct Node* _ConnectOnline(void) {
         curr = appendAction(curr, A, 5, 25);
 
         // Roger!
-        curr = appendAction(curr, A, 5, 500);
+        curr = appendAction(curr, A, 5, 550);
 
         // How do you want to travel / Who do you want to invite
         curr = appendAction(curr, A, 5, 25);
@@ -76,7 +80,7 @@ struct Node* Travel(void) {
 
         // Where did you want to go?
         curr = appendAction(curr, A, 5, 5);
-        curr = appendAction(curr, B, 50, 0);
+        curr = appendAction(curr, B, 40, 0);
 
         // Show options
         curr = appendAction(curr, A, 5, 25);
