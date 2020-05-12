@@ -24,17 +24,20 @@ void InitializeGameScripts(void) {
     for (int i = 0; i < SCRIPT_COUNT; i++) {
          scripts[i] = initializeNode(NOTHING, 1, 1);
     }
-
+    
     // One button press: button mash `A`
-    appendAction(scripts[1], A, 5, 25);
+    appendAction(scripts[1], A, 5, 10);
 
+    scripts[2]->child = Travel();
+    scripts[3]->child = OpenGate();
+    
     // Two button presses: infinite bells
-    scripts[2]->child = Clone40ItemsThenSell();
+    // scripts[2]->child = Clone40ItemsThenSell();
 
-    scripts[3]->child = CloneItem();
+    // scripts[3]->child = CloneItem();
 
-    scripts[4]->child = SellInventoryToDropBox();
-    stop(scripts[4]);
+    // scripts[4]->child = SellInventoryToDropBox();
+    // stop(scripts[4]);
 }
 
 /*
