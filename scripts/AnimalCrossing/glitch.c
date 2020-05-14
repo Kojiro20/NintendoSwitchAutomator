@@ -40,8 +40,8 @@ struct Node* PickUpAndMoveRight(void) {
 
 /*
  * Pre-requisites:
- *   - room setup, prepare glitch table with empty spot in top left
- *   - set up room with tables, glitch table, and the item to clone
+ *   - prepare glitch table with empty spot in top left
+ *   - set up basement with tables, glitch table, and the item to clone
  *
  *     .   .   .   .   .   .
  *    .┌--------------------┐
@@ -50,7 +50,7 @@ struct Node* PickUpAndMoveRight(void) {
  *     │                    │
  *    .│                    │
  *     │╔══╗╔══╗╔══╗╔══╗    │
- *    .│╚══╝╚══╝╚══╝╚══╝   X <-- item to clone
+ *    .│╚══╝╚══╝╚══╝╚══╝   x│ <-- item to clone
  *     └-------┐   ┌--------┘
  *      entry >--┘
  */
@@ -178,9 +178,16 @@ struct Node* Clone1x1Items(void) {
     curr = appendAction(curr, UP, 40, 0);
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
 
+    // exit decoration mode and re-enter to ensure selector state is reset
+    // there is an issue where it sometimes will start selecting the table
+    // but, when it first enters decoration mode it will select things on the table
+    curr = appendAction(curr, B, 5, 20);
+    repeatAction(curr, 3);
+    curr = appendAction(curr, PAD_DOWN, 5, 40);
+    repeatAction(curr, 3);
+
     // move glitch table back to top left
-    curr = appendAction(curr, UP, 20, 0);
-    curr = appendAction(curr, RIGHT, 20, 0);
+    curr = appendAction(curr, RIGHT, 40, 0);
     curr = appendAction(curr, L, 15, 25);
     curr = appendAction(curr, DRAG_UP, 30, 15);
     curr = appendAction(curr, DRAG_LEFT, 70, 15);
