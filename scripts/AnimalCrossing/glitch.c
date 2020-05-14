@@ -111,7 +111,7 @@ struct Node* Clone1x1Items(void) {
 
     // put the crown back in the bottom right
     curr = appendAction(curr, UP, 10, 0);
-    curr = appendAction(curr, LEFT, 10, 2);
+    curr = appendAction(curr, LEFT, 10, 10);
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
     curr = appendAction(curr, DRAG_RIGHT, 20, 15);
 
@@ -119,13 +119,13 @@ struct Node* Clone1x1Items(void) {
     curr = appendAction(curr, LEFT, 15, 0);
     curr = appendAction(curr, DRAG_UP, 40, 15);
     curr = appendAction(curr, LEFT, 15, 0);
-    curr = appendAction(curr, DOWN, 40, 0);
+    curr = appendAction(curr, DOWN, 40, 5);
     curr = appendAction(curr, DRAG_UP, 40, 15);
     curr = appendAction(curr, LEFT, 15, 0);
-    curr = appendAction(curr, DOWN, 40, 0);
+    curr = appendAction(curr, DOWN, 40, 5);
     curr = appendAction(curr, DRAG_UP, 40, 15);
     curr = appendAction(curr, LEFT, 15, 0);
-    curr = appendAction(curr, DOWN, 40, 0);
+    curr = appendAction(curr, DOWN, 40, 5);
     curr = appendAction(curr, DRAG_UP, 40, 15);
 
     // exit decoration mode
@@ -169,13 +169,13 @@ struct Node* Clone1x1Items(void) {
     // move tables back down
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
     curr = appendAction(curr, RIGHT, 15, 0);
-    curr = appendAction(curr, UP, 40, 0);
+    curr = appendAction(curr, UP, 40, 5);
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
     curr = appendAction(curr, RIGHT, 15, 0);
-    curr = appendAction(curr, UP, 40, 0);
+    curr = appendAction(curr, UP, 40, 5);
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
     curr = appendAction(curr, RIGHT, 15, 0);
-    curr = appendAction(curr, UP, 40, 0);
+    curr = appendAction(curr, UP, 40, 5);
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
 
     // exit decoration mode and re-enter to ensure selector state is reset
