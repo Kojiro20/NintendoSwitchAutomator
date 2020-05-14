@@ -4,7 +4,7 @@
 #include "tools.h"
 #include "movement.h"
 
-struct Node* GlitchTableMoveRight(void) {
+struct Node* _GlitchTableMoveRight(void) {
     struct Node* head = initializeNode(NOTHING, 0, 0);
     struct Node* curr = head;
 
@@ -22,7 +22,7 @@ struct Node* GlitchTableMoveRight(void) {
     return head;
 }
 
-struct Node* PickUpAndMoveRight(void) {
+struct Node* _PickUpAndMoveRight(void) {
     struct Node* head = initializeNode(NOTHING, 0, 0);
     struct Node* curr = head;
 
@@ -57,8 +57,8 @@ struct Node* PickUpAndMoveRight(void) {
 struct Node* Clone1x1Items(void) {
 
     // initialize sub routines
-    struct Node* glitchTableMoveRight = GlitchTableMoveRight();
-    struct Node* pickUpAndMoveRight = PickUpAndMoveRight();
+    struct Node* glitchTableMoveRight = _GlitchTableMoveRight();
+    struct Node* pickUpAndMoveRight = _PickUpAndMoveRight();
 
     // create cloning start node
     struct Node* head = initializeNode(NOTHING, 0, 0);
@@ -193,4 +193,161 @@ struct Node* Clone1x1Items(void) {
     curr = appendAction(curr, DRAG_LEFT, 70, 15);
 
     return head;
+}
+
+
+
+struct Node* _SelectNext40Items(void) {
+    
+    // create a row selector node that selects 8 items
+    struct Node* rowSelector = initializeNode(NOTHING, 0, 0);
+    repeatAction(rowSelector, 8);
+    rowSelector->child = initializeNode(NOTHING, 0, 0);
+    struct Node* c = rowSelector->child;
+    c = appendAction(c, A, 5, 10); // move to pockets?
+    c = appendAction(c, A, 5, 7); // yes
+    c = appendAction(c, RIGHT, 5, 7); // next
+
+    // create a move-down node that repeates 5 times
+    struct Node* moveDown = initializeNode(DOWN, 5, 5);
+    repeatAction(moveDown, 5);
+    moveDown->child = rowSelector;
+
+    return moveDown;
+}
+
+
+struct Node* _GoFromHomeToNookMart(void) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
+
+    curr->child = FaceRight();
+    curr = appendAction(curr, RIGHT, 4 * 12, 0);
+    curr->child = FaceUp();
+    curr = appendAction(curr, UP, 10, 0);
+
+    return head;
+}
+
+struct Node* _GoFromNookMartToHome(void) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
+
+    curr->child = FaceLeft();
+    curr = appendAction(curr, LEFT, 4 * 12, 0);
+    curr->child = FaceUp();
+    curr = appendAction(curr, UP, 10, 0);
+
+    return head;
+}
+
+struct Node* _SellInventoryToDropBox(void) {
+    struct Node* head = initializeNode(NOTHING, 10, 0);
+    struct Node* curr = head;
+
+    // create a row selector node that selects 8 items
+    struct Node* rowSelector = initializeNode(NOTHING, 0, 0);
+    repeatAction(rowSelector, 10);
+    rowSelector->child = initializeNode(NOTHING, 0, 0);
+    struct Node* c = rowSelector->child;
+    c = appendAction(c, A, 5, 2); // select
+    c = appendAction(c, RIGHT, 5, 2); // next
+    appendAction(rowSelector, DOWN, 5, 5);
+
+    // create a move-down node that repeates 5 times
+    struct Node* moveDown = initializeNode(NOTHING, 5, 5);
+    repeatAction(moveDown, 4);
+    moveDown->child = rowSelector;
+
+    // standing in front to of the dropbox
+    curr = appendAction(curr, A, 5, 5);
+    repeatAction(curr, 3);
+    curr = appendAction(curr, A, 5, 150); // wow it's the dropbox
+    curr = appendAction(curr, A, 5, 50); // yes sell
+    curr = appendAction(curr, A, 5, 100); // still want to sell
+
+    // go to top of menu
+    curr = appendAction(curr, PAD_UP, 5, 10);
+    repeatAction(curr, 5);
+
+    // select items
+    curr = appendAction(curr, NOTHING, 5, 5);
+    curr->child = moveDown;
+
+    // confirm
+    curr = appendAction(curr, PLUS, 5, 15);
+    curr = appendAction(curr, A, 5, 100);
+
+    return head;
+}
+
+/*
+ * Pre-requisites:
+ *   - place house next to the nook mart
+ *   - build a fence to keep NPCs out
+ *   - empty pockets
+ *   - enter house and don't move
+ *   - open home inventory, find the number of the row of items to sell
+ *     that row and the following 5 will be sold n times
+ *   - select the top row of the category you will sell from
+ *   - be careful looping this
+ * 
+ *                  ┌--- as close as possible
+ *                  v
+ *    .   .   .   .   .   .   .   .   .
+ *     ┌-----------┐  ┌---------------┐
+ *    .│   Home    │  │   Nook Mart   │
+ * ╔═══│           │══│               │
+ * ║  .└---┐   ┌---┘  └░░--┐     ┌----┘
+ * ║         ^          ^            ║ <- NPC fence
+ * ║ entry --┘          └-- drop box ║
+ * ╚═════════════════════════════════╝
+ */
+struct Node* Sell40Items(int startRow, int times) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
+
+    // ensure home inventory is open
+    curr = appendAction(curr, B, 15, 5);
+    repeatAction(curr, 3);
+    curr = appendAction(curr, PAD_RIGHT, 15, 15);
+    repeatAction(curr, 3);
+
+    // go to start row
+    curr = appendAction(curr, PAD_DOWN, 5, 15);
+    repeatAction(curr, startRow);
+
+    // select 40 items
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = _SelectNext40Items();
+
+    // close home inventory
+    curr = appendAction(curr, B, 10, 25);
+
+    // leave house
+    curr = appendAction(curr, DOWN, 4 * 15, 300);
+
+    // go to nook mart
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = _GoFromHomeToNookMart();
+
+    // sell items in drop box
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = _SellInventoryToDropBox();
+
+    // go home
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = _GoFromNookMartToHome();
+
+    // enter home
+    curr = appendAction(curr, A, 5, 400);
+
+    // stop, be careful letting this loop
+    struct Node* meta = initializeNode(NOTHING, 0, 0);
+    meta->child = head;
+    repeatAction(meta, times);
+    appendAction(meta, NOTHING, 0, 0);
+    stop(meta->next);
+
+    return meta;
 }

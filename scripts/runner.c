@@ -37,8 +37,8 @@ void InitializeGameScripts(void) {
     // Clone 1x1 Items
     scripts[4]->child = Clone1x1Items();
 
-    scripts[5]->child = SellInventoryToDropBox();
-    stop(scripts[5]);
+    // Sell 40 items (n times)
+    scripts[5]->child = Sell40Items(20 /* startRow */, 3 /* times */);
 }
 
 /*
