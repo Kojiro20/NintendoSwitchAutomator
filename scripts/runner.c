@@ -24,20 +24,18 @@ void InitializeGameScripts(void) {
     for (int i = 0; i < SCRIPT_COUNT; i++) {
          scripts[i] = initializeNode(NOTHING, 1, 1);
     }
-    
-    // One button press: button mash `A`
-    appendAction(scripts[1], A, 5, 10);
 
-    scripts[2]->child = Travel();
-    scripts[3]->child = OpenGate();
-    
-    // Two button presses: infinite bells
-    // scripts[2]->child = Clone40ItemsThenSell();
+    // One button press: button mash `A` indefinitely
+    scripts[1]->child = initializeNode(A, 5, 25);
 
-    // scripts[3]->child = CloneItem();
+    // Two button presses: tell the dodo to open the gates
+    scripts[2]->child = OpenGate();
 
-    scripts[4]->child = SelectTvsFromHomeInventory();
-    stop(scripts[4]);
+    // Three button presses: tell the todo to travel online (will stop before picking dodo-code or friends)
+    scripts[3]->child = Travel();
+
+    // Clone 1x1 Items
+    scripts[4]->child = Clone1x1Items();
 
     scripts[5]->child = SellInventoryToDropBox();
     stop(scripts[5]);

@@ -4,328 +4,186 @@
 #include "tools.h"
 #include "movement.h"
 
-static struct Node* cloneItem = NULL;
-static struct Node* sellInventory = NULL;
-static struct Node* sellInventory20x = NULL;
-static struct Node* sellInventoryToDropBox = NULL;
-static struct Node* selectTvsFromHomeInventory = NULL;
-static struct Node* goFromHomeToNookMart = NULL;
-static struct Node* goFromNookMartToHome = NULL;
-static struct Node* clone40ItemsThenSell = NULL;
+struct Node* GlitchTableMoveRight(void) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
 
-/*
- * Pre-reqs:
- *  Exit your house, don't move, then start this
- * 
- * End state:
- *  this should end in front of the nook mart drop-box
- */
-struct Node* GoFromHomeToNookMart(void) {
-    if (goFromHomeToNookMart == NULL)
-    {
-        goFromHomeToNookMart = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = goFromHomeToNookMart;
+    // press L to select bottom item (table)
+    curr = appendAction(curr, L, 15, 10);
 
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 7 * 15, 0);
-        curr->child = FaceRight();
-        curr = appendAction(curr, RIGHT, 2 * 15, 0);
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 6 * 15, 0);
-        curr->child = FaceRight();
-        curr = appendAction(curr, RIGHT, 12 * 15, 0);
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 6 + 2 * 15, 0);
-        curr->child = FaceRight();
-        curr = appendAction(curr, RIGHT, 2 * 15, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 2 * 15, 0);
-    }
+    // move the table over one grid space
+    curr = appendAction(curr, DRAG_RIGHT, 10, 15);
 
-    return goFromHomeToNookMart;
+    // fetch the glitched item-to-clone
+    curr = appendAction(curr, LEFT, 11, 15);
+    curr = appendAction(curr, UP, 5, 15);
+    curr = appendAction(curr, DRAG_RIGHT, 10, 15);
+
+    return head;
+}
+
+struct Node* PickUpAndMoveRight(void) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
+
+    // grab to re-anchor cursor to center of item
+    curr = appendAction(curr, A, 10, 30);
+
+    // pick up item
+    curr = appendAction(curr, Y, 10, 15);
+
+    // move to next
+    curr = appendAction(curr, RIGHT, 6, 1);
+
+    return head;
 }
 
 /*
- * Pre-reqs:
- *  Stand in front of the drop box, start selling, then cancel
- * 
- * End state:
- *  this should end inside your house
- */
-struct Node* GoFromNookMartToHome(void) {
-    if (goFromNookMartToHome == NULL)
-    {
-        goFromNookMartToHome = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = goFromNookMartToHome;
-
-        curr->child = FaceDown();
-        curr = appendAction(curr, DOWN, 2 * 15, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 2 * 15, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 6 + 2 * 15, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 12 * 15, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 6 * 15, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 2 * 15 - 4, 0);
-        curr->child = FaceUp();
-        curr = appendAction(curr, UP, 7 * 15 + 6, 0);
-    }
-
-    return goFromNookMartToHome;
-}
-
-/*
- * Pre-reqs:
- *  make sure misc inventory slot is selected
- *  make sure TVs start on the fifth row of inventory (can adjust this by changing - `tvStartRow`)
- *  start script from immediately inside front door
- *  start with empty pocket inventory
- * 
- * End state:
- *  The 40 items from row 5 through 10 will be placed in pocket inventory
- */
-struct Node* SelectTvsFromHomeInventory(void) {
-    int tvStartRow = 5;
-
-    if (selectTvsFromHomeInventory == NULL)
-    {
-        // create a row selector node that selects 8 items
-        struct Node* selectItems = initializeNode(NOTHING, 0, 0);
-        repeatAction(selectItems, 8);
-        selectItems->child = initializeNode(NOTHING, 0, 0);
-        struct Node* c = selectItems->child;
-        c = appendAction(c, A, 5, 10); // move to pockets?
-        c = appendAction(c, A, 5, 7); // yes
-        c = appendAction(c, PAD_RIGHT, 5, 7); // next
-
-        // create a node that moves down and repeats item selection 5 times
-        struct Node* selectRow = initializeNode(PAD_DOWN, 5, 5);
-        repeatAction(selectRow, 5);
-        selectRow->child = selectItems;
-
-        selectTvsFromHomeInventory = initializeNode(NOTHING, 10, 0);
-        struct Node *curr = selectTvsFromHomeInventory;
-
-        // starting in home, open home inventory
-        curr = appendAction(curr, PAD_RIGHT, 15, 25);
-        curr = appendAction(curr, PAD_RIGHT, 15, 25);
-
-        // go to top of misc inventory
-        curr = appendAction(curr, PAD_UP, 5, 5);
-        repeatAction(curr, 12);
-
-        // go down 4 rows, then start
-        curr = appendAction(curr, PAD_DOWN, 5, 5);
-        repeatAction(curr, tvStartRow - 2); // -2 because starts on row 1, then first instruction goes down 1 more
-
-        // select 40 items
-        curr = appendAction(curr, NOTHING, 0, 0);
-        curr->child = selectRow;
-
-        // exit selector
-        curr = appendAction(curr, B, 5, 25);
-        repeatAction(curr, 3);
-    }
-
-    return selectTvsFromHomeInventory;
-}
-
-/*
- * Prerequisites:
- *  be ready to sell everything in your inventory
- *  stand in front of the dropbox
- * 
- * End state:
- *  all items in inventory will be sold, cannot be looped
- */
-struct Node* SellInventoryToDropBox(void) {
-    if (sellInventoryToDropBox == NULL)
-    {
-        sellInventoryToDropBox = initializeNode(NOTHING, 10, 0);
-        struct Node *curr = sellInventoryToDropBox;
-
-        // create a row selector node that selects 8 items
-        struct Node* rowSelector = initializeNode(NOTHING, 0, 0);
-        repeatAction(rowSelector, 10);
-        rowSelector->child = initializeNode(NOTHING, 0, 0);
-        struct Node* c = rowSelector->child;
-        c = appendAction(c, A, 5, 2); // select
-        c = appendAction(c, RIGHT, 5, 2); // next
-        appendAction(rowSelector, DOWN, 5, 5);
-
-        // create a move-down node that repeates 5 times
-        struct Node* moveDown = initializeNode(NOTHING, 5, 5);
-        repeatAction(moveDown, 4);
-        moveDown->child = rowSelector;
-
-        // standing in front to of the dropbox
-        curr = appendAction(curr, A, 5, 5);
-        repeatAction(curr, 3);
-        curr = appendAction(curr, A, 5, 150); // wow it's the dropbox
-        curr = appendAction(curr, A, 5, 50); // yes sell
-        curr = appendAction(curr, A, 5, 100); // still want to sell
-
-        // go to top of menu
-        curr = appendAction(curr, PAD_UP, 5, 10);
-        repeatAction(curr, 5);
-
-        // select items
-        curr = appendAction(curr, NOTHING, 5, 5);
-        curr->child = moveDown;
-
-        // confirm
-        curr = appendAction(curr, PLUS, 5, 15);
-        curr = appendAction(curr, A, 5, 100);
-    }
-
-    return sellInventoryToDropBox;
-}
-
-/*
- * Pre-reqs:
- *  Enter the room to the right of the entry in your home
- *  Configure the room with:
- *      .   .   .   .
- *     ┌------------┐
- *    .│            │
- *     │            │
- *     │            │
- *     │    ╔══╗    │
- *    .│    ║  ║    │
- *     │    ║  ║ <- 4x4 table
- *     ┘    ╚══╝    │
- *    <- entry      │
- *    .           ╔╗│
- *     ┐          ║║ <- TV
- *     │          ║║│
- *     │          ╚╝│
- *     └------------┘
+ * Pre-requisites:
+ *   - room setup, prepare glitch table with empty spot in top left
+ *   - set up room with tables, glitch table, and the item to clone
  *
- * End state:
- *  This will end in the same place it starts
- *  it can be looped until home inventory is full
+ *     .   .   .   .   .   .
+ *    .┌--------------------┐
+ *     │╔══╗                │
+ *    .│╚══╝ <- glitch table│
+ *     │                    │
+ *    .│                    │
+ *     │╔══╗╔══╗╔══╗╔══╗    │
+ *    .│╚══╝╚══╝╚══╝╚══╝   X <-- item to clone
+ *     └-------┐   ┌--------┘
+ *      entry >--┘
  */
-struct Node* CloneItem(void) {
-    if (cloneItem == NULL)
-    {
-        cloneItem = initializeNode(NOTHING, 0, 0);
-        struct Node *curr = cloneItem;
+struct Node* Clone1x1Items(void) {
 
-        // move cursor to the bottom right
-        curr = appendAction(curr, RIGHT, 40, 0);
-        curr = appendAction(curr, DOWN, 40, 0);
+    // initialize sub routines
+    struct Node* glitchTableMoveRight = GlitchTableMoveRight();
+    struct Node* pickUpAndMoveRight = PickUpAndMoveRight();
 
-        // press L to select bottom item (table)
-        curr = appendAction(curr, L, 5, 10);
+    // create cloning start node
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
 
-        // drag left 3, and up 1
-        curr = appendAction(curr, DRAG_LEFT, 20, 25);
-        curr = appendAction(curr, DRAG_UP, 15, 25);
+    // close things
+    curr = appendAction(curr, B, 5, 20);
+    repeatAction(curr, 3);
 
-        // pick it up again and clone to the right side
-        curr = appendAction(curr, DOWN, 5, 0);
-        curr = appendAction(curr, DRAG_RIGHT, 10, 25);
-        curr = appendAction(curr, DRAG_UP, 15, 25);
+    // go into decoration mode
+    curr = appendAction(curr, PAD_DOWN, 5, 40);
+    repeatAction(curr, 3);
 
-        // pick it up again and put it back in the bottom right corner
-        curr = appendAction(curr, RIGHT, 3, 0);
-        curr = appendAction(curr, DRAG_RIGHT, 20, 25);
-        curr = appendAction(curr, DRAG_DOWN, 20, 25);
+    // move cursor to the bottom right (this is where the item-to-clone starts)
+    curr = appendAction(curr, RIGHT, 40, 0);
+    curr = appendAction(curr, DOWN, 40, 0);
 
-        // exit decoration mode
-        curr = appendAction(curr, B, 15, 10);
+    // drag the item to the top left (glitch table should be here already)
+    curr = appendAction(curr, DRAG_LEFT, 75, 15);
+    curr = appendAction(curr, DRAG_UP, 40, 15);
 
-        // leave the room
-        curr = appendAction(curr, NOTHING, 0, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 3 * 15, 300);
+    // perform individual clone 7 times
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = glitchTableMoveRight;
+    repeatAction(curr, 7);
 
-        // re-enter the room
-        curr = appendAction(curr, NOTHING, 0, 0);
-        curr->child = FaceRight();
-        curr = appendAction(curr, RIGHT, 3 * 15, 300);
+    // move the table down one grid space, then back to the left side
+    curr = appendAction(curr, L, 15, 10);
+    curr = appendAction(curr, DRAG_DOWN, 10, 15);
+    curr = appendAction(curr, DRAG_LEFT, 60, 15);
 
-        // go into decoration mode
-        curr = appendAction(curr, PAD_DOWN, 5, 80);
+    // retrieve the 8th cloned item
+    curr = appendAction(curr, UP, 10, 0);
+    curr = appendAction(curr, RIGHT, 50, 0);
+    curr = appendAction(curr, DRAG_DOWN, 10, 15);
+    curr = appendAction(curr, DRAG_LEFT, 60, 15);
 
-        // collect clones
-        curr = appendAction(curr, NOTHING, 5, 10);
-        curr = appendAction(curr, Y, 10, 30);
-        curr = appendAction(curr, RIGHT, 10, 0);
-        curr = appendAction(curr, UP, 5, 30);
-        curr = appendAction(curr, Y, 10, 30);
-    }
+    // extra L to offset selection
+    curr = appendAction(curr, L, 15, 10);
 
-    return cloneItem;
-}
+    // perform individual clone 7 times
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = glitchTableMoveRight;
+    repeatAction(curr, 7);
 
-/*
- * Prerequisites:
- *  start in the room to the right of the entry room in your house
- *  have empty pockets
- *  have 4 full rows of items before the first TV in your inventory
- *      40 tvs will be created and everything from rows 5-10 will be sold
- * 
- * End state:
- *  this will end in the same place it starts, it can be looped
- */
-struct Node* Clone40ItemsThenSell(void) {
-    if (clone40ItemsThenSell == NULL)
-    {
-        clone40ItemsThenSell = initializeNode(NOTHING, 0, 0);
-        struct Node* curr = clone40ItemsThenSell;
+    // move the table over and down one grid space
+    curr = appendAction(curr, L, 15, 10);
+    curr = appendAction(curr, DRAG_RIGHT, 10, 15);
+    curr = appendAction(curr, DRAG_DOWN, 10, 15);
 
-        // close things
-        curr = appendAction(curr, B, 5, 20);
-        repeatAction(curr, 3);
+    // put the crown back in the bottom right
+    curr = appendAction(curr, UP, 10, 0);
+    curr = appendAction(curr, LEFT, 10, 2);
+    curr = appendAction(curr, DRAG_DOWN, 40, 15);
+    curr = appendAction(curr, DRAG_RIGHT, 20, 15);
 
-        // go into decoration mode
-        curr = appendAction(curr, PAD_DOWN, 5, 40);
-        repeatAction(curr, 3);
+    // move tables up to catch cloned items
+    curr = appendAction(curr, LEFT, 15, 0);
+    curr = appendAction(curr, DRAG_UP, 40, 15);
+    curr = appendAction(curr, LEFT, 15, 0);
+    curr = appendAction(curr, DOWN, 40, 0);
+    curr = appendAction(curr, DRAG_UP, 40, 15);
+    curr = appendAction(curr, LEFT, 15, 0);
+    curr = appendAction(curr, DOWN, 40, 0);
+    curr = appendAction(curr, DRAG_UP, 40, 15);
+    curr = appendAction(curr, LEFT, 15, 0);
+    curr = appendAction(curr, DOWN, 40, 0);
+    curr = appendAction(curr, DRAG_UP, 40, 15);
 
-        // make 40 tvs
-        curr = appendAction(curr, NOTHING, 0, 0);
-        curr->child = CloneItem();
-        repeatAction(curr, 20);
+    // exit decoration mode
+    curr = appendAction(curr, B, 15, 10);
 
-        // exit decoration mode
-        curr = appendAction(curr, B, 5, 10);
-        repeatAction(curr, 3);
+    // leave the room
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = FaceLeft();
+    curr = appendAction(curr, LEFT, 3 * 15, 300);
 
-        // leave room
-        curr = appendAction(curr, NOTHING, 1, 0);
-        curr->child = FaceLeft();
-        curr = appendAction(curr, LEFT, 3 * 15, 300);
+    // re-enter the room
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = FaceRight();
+    curr = appendAction(curr, RIGHT, 3 * 15, 300);
 
-        // stand in middle of room
-        curr = appendAction(curr, LEFT, 3 * 16, 0);
+    // go into decoration mode
+    curr = appendAction(curr, PAD_DOWN, 5, 80);
 
-        // grab 40 tvs from inventory
-        curr = appendAction(curr, NOTHING, 1, 0);
-        curr->child = SelectTvsFromHomeInventory();
+    // move cursor to the top left
+    curr = appendAction(curr, LEFT, 50, 0);
+    curr = appendAction(curr, UP, 50, 0);
 
-        // leave house
-        curr = appendAction(curr, DOWN, 6 * 15, 300);
+    // pick up items
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = pickUpAndMoveRight;
+    repeatAction(curr, 8);
 
-        // go to nook's cranny
-        curr->child = GoFromHomeToNookMart();
+    // move cursor to the left and down one row
+    curr = appendAction(curr, LEFT, 70, 0);
+    curr = appendAction(curr, DOWN, 5, 0);
 
-        // sale box
-        curr = appendAction(curr, NOTHING, 5, 0);
-        curr->child = SellInventoryToDropBox();
-        
-        // go home
-        curr = appendAction(curr, NOTHING, 0, 0);
-        curr->child = GoFromNookMartToHome();
-        curr = appendAction(curr, A, 5, 400);
+    // pick up items
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = pickUpAndMoveRight;
+    repeatAction(curr, 8);
 
-        // go back to room
-        curr = appendAction(curr, UP, 2 * 15, 0);
-        curr = appendAction(curr, RIGHT, 5 * 16, 300);
-    }
+    // move cursor to the top left
+    curr = appendAction(curr, LEFT, 70, 0);
+    curr = appendAction(curr, UP, 20, 0);
 
-    return clone40ItemsThenSell;
+    // move tables back down
+    curr = appendAction(curr, DRAG_DOWN, 40, 15);
+    curr = appendAction(curr, RIGHT, 15, 0);
+    curr = appendAction(curr, UP, 40, 0);
+    curr = appendAction(curr, DRAG_DOWN, 40, 15);
+    curr = appendAction(curr, RIGHT, 15, 0);
+    curr = appendAction(curr, UP, 40, 0);
+    curr = appendAction(curr, DRAG_DOWN, 40, 15);
+    curr = appendAction(curr, RIGHT, 15, 0);
+    curr = appendAction(curr, UP, 40, 0);
+    curr = appendAction(curr, DRAG_DOWN, 40, 15);
+
+    // move glitch table back to top left
+    curr = appendAction(curr, UP, 20, 0);
+    curr = appendAction(curr, RIGHT, 20, 0);
+    curr = appendAction(curr, L, 15, 25);
+    curr = appendAction(curr, DRAG_UP, 30, 15);
+    curr = appendAction(curr, DRAG_LEFT, 70, 15);
+
+    return head;
 }
