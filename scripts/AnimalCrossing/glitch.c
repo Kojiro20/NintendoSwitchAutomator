@@ -38,6 +38,21 @@ struct Node* _PickUpAndMoveRight(void) {
     return head;
 }
 
+struct Node* _ResetDecorationMode(void) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
+
+    // close things
+    curr = appendAction(curr, B, 5, 20);
+    repeatAction(curr, 3);
+
+    // go into decoration mode
+    curr = appendAction(curr, PAD_DOWN, 5, 40);
+    repeatAction(curr, 3);
+
+    return head;
+}
+
 /*
  * Pre-requisites:
  *   - prepare glitch table with empty spot in top left
@@ -51,26 +66,26 @@ struct Node* _PickUpAndMoveRight(void) {
  *    .│                    │
  *     │╔══╗╔══╗╔══╗╔══╗    │
  *    .│╚══╝╚══╝╚══╝╚══╝   x│ <-- item to clone
- *     └-------┐   ┌--------┘
+ *     └-------┐    ┌-------┘
  *      entry >--┘
  */
+static struct Node* clone1x1Items = NULL;
 struct Node* Clone1x1Items(void) {
+    if (clone1x1Items != NULL) {
+        return clone1x1Items;
+    }
 
     // initialize sub routines
     struct Node* glitchTableMoveRight = _GlitchTableMoveRight();
     struct Node* pickUpAndMoveRight = _PickUpAndMoveRight();
+    struct Node* resetDecorationMode = _ResetDecorationMode();
 
     // create cloning start node
-    struct Node* head = initializeNode(NOTHING, 0, 0);
-    struct Node* curr = head;
+    clone1x1Items = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = clone1x1Items;
 
-    // close things
-    curr = appendAction(curr, B, 5, 20);
-    repeatAction(curr, 3);
-
-    // go into decoration mode
-    curr = appendAction(curr, PAD_DOWN, 5, 40);
-    repeatAction(curr, 3);
+    // reset decoration mode
+    curr->child = resetDecorationMode;
 
     // move cursor to the bottom right (this is where the item-to-clone starts)
     curr = appendAction(curr, RIGHT, 40, 0);
@@ -111,22 +126,25 @@ struct Node* Clone1x1Items(void) {
 
     // put the crown back in the bottom right
     curr = appendAction(curr, UP, 10, 0);
-    curr = appendAction(curr, LEFT, 10, 10);
+    curr = appendAction(curr, LEFT, 10, 20);
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
     curr = appendAction(curr, DRAG_RIGHT, 20, 15);
 
+    // reset decoration mode
+    curr->child = resetDecorationMode;
+
+    // move cursor to the bottom left
+    curr = appendAction(curr, LEFT, 40, 0);
+    curr = appendAction(curr, DOWN, 40, 0);
+
     // move tables up to catch cloned items
-    curr = appendAction(curr, LEFT, 15, 0);
-    curr = appendAction(curr, DRAG_UP, 40, 15);
-    curr = appendAction(curr, LEFT, 15, 0);
-    curr = appendAction(curr, DOWN, 40, 5);
-    curr = appendAction(curr, DRAG_UP, 40, 15);
-    curr = appendAction(curr, LEFT, 15, 0);
-    curr = appendAction(curr, DOWN, 40, 5);
-    curr = appendAction(curr, DRAG_UP, 40, 15);
-    curr = appendAction(curr, LEFT, 15, 0);
-    curr = appendAction(curr, DOWN, 40, 5);
-    curr = appendAction(curr, DRAG_UP, 40, 15);
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = initializeNode(NOTHING, 0, 10);
+    struct Node* c = curr->child;
+    c = appendAction(c, DRAG_UP, 40, 15);
+    c = appendAction(c, DOWN, 40, 15);
+    c = appendAction(c, RIGHT, 15, 15);
+    repeatAction(curr, 4);
 
     // exit decoration mode
     curr = appendAction(curr, B, 15, 10);
@@ -162,29 +180,30 @@ struct Node* Clone1x1Items(void) {
     curr->child = pickUpAndMoveRight;
     repeatAction(curr, 8);
 
-    // move cursor to the top left
-    curr = appendAction(curr, LEFT, 70, 0);
-    curr = appendAction(curr, UP, 20, 0);
+    // reset decoration mode
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = resetDecorationMode;
 
-    // move tables back down
-    curr = appendAction(curr, DRAG_DOWN, 40, 15);
-    curr = appendAction(curr, RIGHT, 15, 0);
-    curr = appendAction(curr, UP, 40, 5);
-    curr = appendAction(curr, DRAG_DOWN, 40, 15);
-    curr = appendAction(curr, RIGHT, 15, 0);
-    curr = appendAction(curr, UP, 40, 5);
-    curr = appendAction(curr, DRAG_DOWN, 40, 15);
-    curr = appendAction(curr, RIGHT, 15, 0);
-    curr = appendAction(curr, UP, 40, 5);
-    curr = appendAction(curr, DRAG_DOWN, 40, 15);
+    // move cursor to the top left
+    curr = appendAction(curr, LEFT, 40, 0);
+    curr = appendAction(curr, UP, 40, 0);
+
+    // move tables up to catch cloned items
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = initializeNode(NOTHING, 0, 10);
+    struct Node* d = curr->child;
+    d = appendAction(d, DRAG_DOWN, 40, 15);
+    d = appendAction(d, UP, 40, 15);
+    d = appendAction(d, RIGHT, 15, 15);
+    repeatAction(curr, 4);
 
     // exit decoration mode and re-enter to ensure selector state is reset
     // there is an issue where it sometimes will start selecting the table
     // but, when it first enters decoration mode it will select things on the table
-    curr = appendAction(curr, B, 5, 20);
-    repeatAction(curr, 3);
-    curr = appendAction(curr, PAD_DOWN, 5, 40);
-    repeatAction(curr, 3);
+    // reset decoration mode
+    // reset decoration mode
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = resetDecorationMode;
 
     // move glitch table back to top left
     curr = appendAction(curr, RIGHT, 40, 0);
@@ -192,7 +211,7 @@ struct Node* Clone1x1Items(void) {
     curr = appendAction(curr, DRAG_UP, 30, 15);
     curr = appendAction(curr, DRAG_LEFT, 70, 15);
 
-    return head;
+    return clone1x1Items;
 }
 
 
@@ -206,10 +225,10 @@ struct Node* _SelectNext40Items(void) {
     struct Node* c = rowSelector->child;
     c = appendAction(c, A, 5, 10); // move to pockets?
     c = appendAction(c, A, 5, 7); // yes
-    c = appendAction(c, RIGHT, 5, 7); // next
+    c = appendAction(c, PAD_RIGHT, 5, 7); // next
 
     // create a move-down node that repeates 5 times
-    struct Node* moveDown = initializeNode(DOWN, 5, 5);
+    struct Node* moveDown = initializeNode(PAD_DOWN, 5, 5);
     repeatAction(moveDown, 5);
     moveDown->child = rowSelector;
 
@@ -250,9 +269,9 @@ struct Node* _SellInventoryToDropBox(void) {
     repeatAction(rowSelector, 10);
     rowSelector->child = initializeNode(NOTHING, 0, 0);
     struct Node* c = rowSelector->child;
-    c = appendAction(c, A, 5, 2); // select
-    c = appendAction(c, RIGHT, 5, 2); // next
-    appendAction(rowSelector, DOWN, 5, 5);
+    c = appendAction(c, A, 5, 5); // select
+    c = appendAction(c, PAD_RIGHT, 5, 5); // next
+    appendAction(rowSelector, PAD_DOWN, 5, 5);
 
     // create a move-down node that repeates 5 times
     struct Node* moveDown = initializeNode(NOTHING, 5, 5);
@@ -262,7 +281,7 @@ struct Node* _SellInventoryToDropBox(void) {
     // standing in front to of the dropbox
     curr = appendAction(curr, A, 5, 5);
     repeatAction(curr, 3);
-    curr = appendAction(curr, A, 5, 150); // wow it's the dropbox
+    curr = appendAction(curr, A, 5, 100); // wow it's the dropbox
     curr = appendAction(curr, A, 5, 50); // yes sell
     curr = appendAction(curr, A, 5, 100); // still want to sell
 
@@ -275,47 +294,30 @@ struct Node* _SellInventoryToDropBox(void) {
     curr->child = moveDown;
 
     // confirm
+    curr = appendAction(curr, NOTHING, 0, 25);
     curr = appendAction(curr, PLUS, 5, 15);
     curr = appendAction(curr, A, 5, 100);
 
     return head;
 }
 
-/*
- * Pre-requisites:
- *   - place house next to the nook mart
- *   - build a fence to keep NPCs out
- *   - empty pockets
- *   - enter house and don't move
- *   - open home inventory, find the number of the row of items to sell
- *     that row and the following 5 will be sold n times
- *   - select the top row of the category you will sell from
- *   - be careful looping this
- * 
- *                  ┌--- as close as possible
- *                  v
- *    .   .   .   .   .   .   .   .   .
- *     ┌-----------┐  ┌---------------┐
- *    .│   Home    │  │   Nook Mart   │
- * ╔═══│           │══│               │
- * ║  .└---┐   ┌---┘  └░░--┐     ┌----┘
- * ║         ^          ^            ║ <- NPC fence
- * ║ entry --┘          └-- drop box ║
- * ╚═════════════════════════════════╝
- */
-struct Node* Sell40Items(int startRow, int times) {
-    struct Node* head = initializeNode(NOTHING, 0, 0);
-    struct Node* curr = head;
+static struct Node* sell40Items = NULL;
+struct Node* Sell40Items(void) {
+    if (sell40Items != NULL) {
+        return sell40Items;
+    }
+
+    sell40Items = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = sell40Items;
 
     // ensure home inventory is open
-    curr = appendAction(curr, B, 15, 5);
+    curr = appendAction(curr, B, 10, 5);
     repeatAction(curr, 3);
-    curr = appendAction(curr, PAD_RIGHT, 15, 15);
-    repeatAction(curr, 3);
+    curr = appendAction(curr, PAD_RIGHT, 10, 25);
+    repeatAction(curr, 2);
 
-    // go to start row
-    curr = appendAction(curr, PAD_DOWN, 5, 15);
-    repeatAction(curr, startRow);
+    // go to top
+    curr = appendAction(curr, R_UP, 100, 0);
 
     // select 40 items
     curr = appendAction(curr, NOTHING, 0, 0);
@@ -342,12 +344,82 @@ struct Node* Sell40Items(int startRow, int times) {
     // enter home
     curr = appendAction(curr, A, 5, 400);
 
-    // stop, be careful letting this loop
-    struct Node* meta = initializeNode(NOTHING, 0, 0);
-    meta->child = head;
-    repeatAction(meta, times);
-    appendAction(meta, NOTHING, 0, 0);
-    stop(meta->next);
+    return sell40Items;
+}
 
-    return meta;
+/*
+ * Pre-requisites:
+ *   - place house next to the nook mart
+ *   - build a fence to keep NPCs out
+ *   - empty pockets
+ *   - enter house and don't move
+ *   - open home inventory, find the number of the row of items to sell
+ *     that row and the following 5 will be sold n times
+ *   - select the top row of the category you will sell from
+ *   - be careful looping this
+ * 
+ *                  ┌--- as close as possible
+ *                  v
+ *    .   .   .   .   .   .   .   .   .
+ *     ┌-----------┐  ┌---------------┐
+ *    .│   Home    │  │   Nook Mart   │
+ * ╔═══│           │══│               │
+ * ║  .└---┐   ┌---┘  └░░--┐     ┌----┘
+ * ║         ^          ^            ║ <- NPC fence
+ * ║ entry --┘          └-- drop box ║
+ * ╚═════════════════════════════════╝
+ */
+struct Node* Sell40ItemsNTimes(int times) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
+
+    curr->child = Sell40Items();
+    repeatAction(curr, times);
+
+    curr = appendAction(curr, NOTHING, 0, 0);
+    stop(curr);
+
+    return head;
+}
+
+/*
+ * Pre-requisites:
+ *   - prepare the basement for Clone1x1Items
+ *   - prepare house/nook-mart for Sell40ItemsNTimes
+ *   - empty pockets
+ *   - select the category of your 1x1 items and sort the category by time (recent items at the top)
+ *   - enter your house and don't move before starting the script
+ */
+struct Node* CloneAndSell80Items(void) {
+    struct Node* head = initializeNode(NOTHING, 0, 0);
+    struct Node* curr = head;
+
+    // close any open dialogs
+    curr = appendAction(curr, B, 15, 5);
+    repeatAction(curr, 3);
+
+    // go into basement
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = FaceRight();
+    curr = appendAction(curr, DOWN, 5, 0);
+    curr = appendAction(curr, RIGHT, 3 * 15, 300);
+
+    // perform 1x1 cloning 5 times (16 items per run)
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = Clone1x1Items();
+    repeatAction(curr, 5);
+
+    // close any open dialogs
+    curr = appendAction(curr, B, 15, 5);
+    repeatAction(curr, 3);
+
+    // go back to entry
+    curr = appendAction(curr, LEFT, 3 * 15, 300);
+    
+    // perform selling 2 times (40 items per run)
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = Sell40Items();
+    repeatAction(curr, 2);
+
+    return head;
 }
