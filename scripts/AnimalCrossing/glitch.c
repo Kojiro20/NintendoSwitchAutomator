@@ -124,13 +124,18 @@ struct Node* Clone1x1Items(void) {
     curr = appendAction(curr, DRAG_RIGHT, 10, 15);
     curr = appendAction(curr, DRAG_DOWN, 10, 15);
 
+    // reset decoration mode
+    curr = appendAction(curr, NOTHING, 0, 0);
+    curr->child = resetDecorationMode;
+
     // put the crown back in the bottom right
     curr = appendAction(curr, UP, 10, 0);
-    curr = appendAction(curr, LEFT, 10, 20);
+    curr = appendAction(curr, RIGHT, 18, 20);
     curr = appendAction(curr, DRAG_DOWN, 40, 15);
     curr = appendAction(curr, DRAG_RIGHT, 20, 15);
 
     // reset decoration mode
+    curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = resetDecorationMode;
 
     // move cursor to the bottom left
@@ -200,8 +205,6 @@ struct Node* Clone1x1Items(void) {
     // exit decoration mode and re-enter to ensure selector state is reset
     // there is an issue where it sometimes will start selecting the table
     // but, when it first enters decoration mode it will select things on the table
-    // reset decoration mode
-    // reset decoration mode
     curr = appendAction(curr, NOTHING, 0, 0);
     curr->child = resetDecorationMode;
 
@@ -228,9 +231,12 @@ struct Node* _SelectNext40Items(void) {
     c = appendAction(c, PAD_RIGHT, 5, 7); // next
 
     // create a move-down node that repeates 5 times
-    struct Node* moveDown = initializeNode(PAD_DOWN, 5, 5);
+    struct Node* moveDown = initializeNode(NOTHING, 0, 0);
     repeatAction(moveDown, 5);
-    moveDown->child = rowSelector;
+    moveDown->child = initializeNode(NOTHING, 0, 0);
+    struct Node* c2 = moveDown->child;
+    c2->child = rowSelector;
+    c2 = appendAction(c2, PAD_DOWN, 5, 5);
 
     return moveDown;
 }
@@ -353,10 +359,9 @@ struct Node* Sell40Items(void) {
  *   - build a fence to keep NPCs out
  *   - empty pockets
  *   - enter house and don't move
- *   - open home inventory, find the number of the row of items to sell
- *     that row and the following 5 will be sold n times
- *   - select the top row of the category you will sell from
- *   - be careful looping this
+ *   - open home inventory, select a category and sort-order
+ *     the top 40 items will be sold N times
+ *   - be careful!
  * 
  *                  ┌--- as close as possible
  *                  v
