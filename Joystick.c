@@ -21,10 +21,10 @@ these buttons for our use.
 #include "Joystick.h"
 
 static Command command = { NOTHING, 10 };
-static bool running = false;
 
 // Main entry point.
 int main(void) {
+    bool running = false;
     unsigned short scriptNum = 0;
     clock_init();
     clock_time_t lastButtonPressTime = clock_time();
@@ -427,13 +427,8 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
                     break;
             }
 
-            if (command.duration < 0) {
-                duration_count = 0;
-                state = CLEANUP;
-                break;
-            }
-            
             duration_count++;
+
             if (duration_count > command.duration)
             {
                 duration_count = 0;
@@ -442,18 +437,14 @@ void GetNextReport(USB_JoystickReport_Input_t* const ReportData) {
 
                 state = BREATHE;
             }
+
             break;
 
         case CLEANUP:
-            // TODO: figure out why this isn't doing anything
-            running = false;
-            SelectScript(0);
-
             state = DONE;
             break;
 
         case DONE:
-            PORTB = 0x0; // turn off LED
             #ifdef ALERT_WHEN_DONE
             portsval = ~portsval;
             PORTD = portsval; //flash LED(s) and sound buzzer if attached
