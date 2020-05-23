@@ -23,8 +23,7 @@ struct Node* HitRock(void) {
         struct Node* curr = hitRock;
 
         // Do this a few times, sometimes doesn't fully face correct direction
-        curr->child = FaceUpRight();
-        curr->next = initializeNode(NOTHING, 50, 0);
+        curr->child = FaceUp();
         curr->child = FaceUpRight();
 
         for (int i = 0; i < 8; i++) {

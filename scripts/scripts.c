@@ -41,11 +41,6 @@ void repeatAction(struct Node* curr, int repeats) {
  * Add a noOp cycle to the end to stop a script that should not repeat
  */
 void stop(struct Node* curr) {
-    struct Node* end = initializeNode(NOTHING, 50, 50);
-    
-    // create a cycle
-    end->next = end;
-
-    // assign it to the curr node's next pointer
+    struct Node* end = initializeNode(NOTHING, -1, 0);
     curr->next = end;
 }
