@@ -4,7 +4,11 @@
 #include "movement.h"
 
 static struct Node* faceUp = NULL;
+static struct Node* faceUpLeft = NULL;
+static struct Node* faceUpRight = NULL;
 static struct Node* faceDown = NULL;
+static struct Node* faceDownLeft = NULL;
+static struct Node* faceDownpRight = NULL;
 static struct Node* faceLeft = NULL;
 static struct Node* faceRight = NULL;
 static struct Node* runInCircle = NULL;
@@ -30,12 +34,44 @@ struct Node* FaceUp(void) {
     return faceUp;
 }
 
+struct Node* FaceUpLeft(void) {
+    if (faceUpLeft == NULL) {
+        faceUpLeft = faceDir(UP_LEFT);
+    }
+
+    return faceUpLeft;
+}
+
+struct Node* FaceUpRight(void) {
+    if (faceUpRight == NULL) {
+        faceUpRight = faceDir(UP_RIGHT);
+    }
+
+    return faceUpRight;
+}
+
 struct Node* FaceDown(void) {
     if (faceDown == NULL) {
         faceDown = faceDir(DOWN);
     }
 
     return faceDown;
+}
+
+struct Node* FaceDownLeft(void) {
+    if (faceDownLeft == NULL) {
+        faceDownLeft = faceDir(DOWN_LEFT);
+    }
+
+    return faceDownLeft;
+}
+
+struct Node* FaceDownRight(void) {
+    if (faceDownpRight == NULL) {
+        faceDownpRight = faceDir(DOWN_RIGHT);
+    }
+
+    return faceDownpRight;
 }
 
 struct Node* FaceLeft(void) {

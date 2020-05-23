@@ -9,6 +9,7 @@
 #include "AnimalCrossing/trees.h"
 #include "AnimalCrossing/glitch.h"
 #include "AnimalCrossing/dodo.h"
+#include "AnimalCrossing/rocks.h"
 
 /*
  * Internal scripting tools. Anything generic to all games would go here.
