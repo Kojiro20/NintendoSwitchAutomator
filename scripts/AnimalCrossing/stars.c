@@ -8,9 +8,9 @@ struct Node* WishStars(void) {
         struct Node* curr = wishStars;
 
         // Look up
-        curr = appendAction(curr, R_UP, 10, 25);
+        curr = appendAction(curr, R_UP, 10, 10);
         // Wish
-        curr = appendAction(curr, A, 5, 25);
+        curr = appendAction(curr, A, 5, 10);
     }
 
     return wishStars;
