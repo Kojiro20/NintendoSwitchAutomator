@@ -16,7 +16,7 @@ struct Node* _Welcome(void) {
         // Start talking to Orville
         // Welcome to the airport
         curr = appendAction(curr, A, 5, 50);
-        curr = appendAction(curr, B, 75, 0);
+        curr = appendAction(curr, B, 60, 0);
 
         // How can I help you out today?
         curr = appendAction(curr, A, 5, 5);
@@ -110,4 +110,74 @@ struct Node* OpenGate(void) {
     }
 
     return openGate;
+}
+
+static struct Node* mysteryIsland = NULL;
+struct Node* MysteryIsland(void) {
+    if (mysteryIsland == NULL) {
+        mysteryIsland = initializeNode(NOTHING, 0, 0);
+        struct Node* curr = mysteryIsland;
+
+        curr->child = _Welcome();
+
+        // I wanna fly
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 5, 25);
+
+        // Roger!
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 5, 25);
+
+        // Looks like you have a NMT
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 30, 0);
+
+        // Where did you want to go?
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 40, 0);
+
+        // Show options
+        curr = appendAction(curr, A, 5, 25);
+
+        // Use NMT
+        curr = appendAction(curr, DOWN, 10, 0);
+
+        // So you wanna use your NMT? Roger!
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 25, 0);
+
+        // You all packed?
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 70, 0);
+
+        // Show options
+        curr = appendAction(curr, A, 5, 25);
+
+        // Time for takeoff
+        curr = appendAction(curr, A, 5, 25);
+
+        // Wait
+        curr = appendAction(curr, A, 5, 900);
+
+        // What would dodos do
+        curr = appendAction(curr, A, 5, 600);
+
+        // Wilbur: Alright, we are two down and docked
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 50, 0);
+
+        // Wilbur: Meanwhile, I'll be in a holding pattern here 
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 50, 0);
+
+        // Wilbur: Go catch some bees and chop some trees!
+        curr = appendAction(curr, A, 5, 5);
+        curr = appendAction(curr, B, 25, 0);
+
+        curr = appendAction(curr, A, 5, 5);
+
+        stop(curr);
+    }
+
+    return mysteryIsland;
 }

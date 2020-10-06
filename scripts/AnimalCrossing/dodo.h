@@ -3,5 +3,6 @@
 
 struct Node* Travel(void);
 struct Node* OpenGate(void);
+struct Node* MysteryIsland(void);
 
 #endif
