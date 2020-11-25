@@ -15,15 +15,15 @@ struct Node* _Welcome(void) {
 
         // Start talking to Orville
         // Welcome to the airport
-        curr = appendAction(curr, A, 5, 50);
-        curr = appendAction(curr, B, 60, 0);
+        // Note: this delay needs to be kind of long because dodo sometimes is drinking coffee
+        // or reading book and takes a while to put them away
+        curr = appendAction(curr, A, 5, 300);
 
         // How can I help you out today?
-        curr = appendAction(curr, A, 5, 5);
-        curr = appendAction(curr, B, 5, 25);
+        curr = appendAction(curr, A, 5, 50);
 
         // Show options
-        curr = appendAction(curr, A, 5, 25);
+        curr = appendAction(curr, A, 5, 30);
     }
 
     return welcome;
@@ -36,27 +36,25 @@ struct Node* _ConnectOnline(void) {
         struct Node* curr = connectOnline;
 
         // You wanna do local play or online play
-        curr = appendAction(curr, A, 5, 25);
-        curr = appendAction(curr, B, 50, 0);
+        curr = appendAction(curr, A, 5, 175);
 
         // Show options
-        curr = appendAction(curr, A, 5, 25);
+        curr = appendAction(curr, A, 5, 30);
 
         // Online play
         curr = appendAction(curr, DOWN, 10, 0);
 
         // Let me just connect to you the internet
-        curr = appendAction(curr, A, 5, 5);
-        curr = appendAction(curr, B, 75, 0);
+        curr = appendAction(curr, A, 5, 150);
 
         // Show options
-        curr = appendAction(curr, A, 5, 25);
+        curr = appendAction(curr, A, 5, 30);
 
         // Roger!
-        curr = appendAction(curr, A, 5, 550);
+        curr = appendAction(curr, A, 5, 600);
 
         // How do you want to travel / Who do you want to invite
-        curr = appendAction(curr, A, 5, 25);
+        curr = appendAction(curr, A, 5, 30);
     }
 
     return connectOnline;
@@ -71,19 +69,16 @@ struct Node* Travel(void) {
         curr->child = _Welcome();
 
         // I wanna fly
-        curr = appendAction(curr, A, 5, 5);
-        curr = appendAction(curr, B, 5, 25);
+        curr = appendAction(curr, A, 5, 50);
 
         // Roger!
-        curr = appendAction(curr, A, 5, 5);
-        curr = appendAction(curr, B, 5, 25);
+        curr = appendAction(curr, A, 5, 50);
 
         // Where did you want to go?
-        curr = appendAction(curr, A, 5, 5);
-        curr = appendAction(curr, B, 40, 0);
+        curr = appendAction(curr, A, 5, 50);
 
         // Show options
-        curr = appendAction(curr, A, 5, 25);
+        curr = appendAction(curr, A, 5, 30);
 
         curr->child = _ConnectOnline();
 
