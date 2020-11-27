@@ -169,8 +169,6 @@ struct Node* MysteryIsland(void) {
         curr = appendAction(curr, A, 5, 5);
         curr = appendAction(curr, B, 25, 0);
 
-        curr = appendAction(curr, A, 5, 5);
-
         stop(curr);
     }
 
