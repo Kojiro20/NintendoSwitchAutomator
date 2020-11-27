@@ -1,15 +1,16 @@
 # Animal Crossing Nintendo Switch Automator
 
 ## Pre-reqs
-1) Clone this repo
+1) Clone this repo (with `--recurse-submodules`)
+   ```bash
+   git clone --recurse-submodules git@github.com:<>.git
+   ```
 
-2) Initialize sub modules (or manually clone lufa)
-  ```bash
-  # from project root
-  git clone https://github.com/abcminiuser/lufa.git
-  # or
-  git clone --recursive <github clone path/>
-  ```
+2) Ensure lufa was cloned (`make` will fail otherwise)
+   ```bash
+   # from project root
+   git clone https://github.com/abcminiuser/lufa.git
+   ```
   
 3) Install Arduino IDE https://www.arduino.cc/en/Main/Software
 
@@ -34,16 +35,10 @@
   brew install avr-gcc
   ```
 
-2) Build
+2) Build and flash (tap the button twice to put it into flash mode)
   ```bash
   # from project root
-  make
-  ```
-
-3) Flash (tap the button twice to put it into flash mode)
-  ```bash
-  # from project root
-  ./flash.sh
+  make && ./flash.sh
   ```
 
 ## How to use
