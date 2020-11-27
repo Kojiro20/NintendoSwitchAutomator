@@ -1,5 +1,7 @@
 # Animal Crossing Nintendo Switch Automator
 
+![animal crossing automation](https://user-images.githubusercontent.com/72478718/100486931-e09fde80-30cb-11eb-8111-6655a082b230.gif)
+
 ## Pre-reqs
 1) Clone this repo (with `--recurse-submodules`)
    ```bash
