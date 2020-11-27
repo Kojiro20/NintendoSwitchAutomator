@@ -14,12 +14,12 @@
 3) Install Arduino IDE https://www.arduino.cc/en/Main/Software
 
 4) Obtain hardware
-    - Arduino Micro
-    - Micro USB to USB C cable (to connect Arduino to Nintendo Switch)
-    - Breadboard
-    - 10kΩ resistor
-    - Wires
-    - Push button
+    - [Arduino Micro](https://www.amazon.com/dp/B00AFY2S56)
+    - [Micro USB to USB C cable](https://www.amazon.com/dp/B0744BKDRD) (to connect Arduino to Nintendo Switch)
+    - [Breadboard Kit](https://www.amazon.com/dp/B01ERPEMAC)
+    - 10kΩ resistor (included in kit)
+    - Wires  (included in kit)
+    - Push button  (included in kit)
 
 5) Attach the push button to the Arduino Micro according to the following diagram:
 ![arduino_micro_fritzing](https://user-images.githubusercontent.com/72478718/100475856-c05f2800-30a9-11eb-9a83-1cccae4d495f.png)
